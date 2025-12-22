@@ -9,7 +9,20 @@
       "Bash(git push:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\ndocs: Branding i fikcyjne dane kliniki MedVita\n\n- Nazwa, kolory, typografia\n- Lista specjalizacji i usług\n- Przykładowe teksty marketingowe\n- Dane do seederów\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(git commit -m \"$\\(cat <<''EOF''\ndocs: Dodanie wytycznych Accessibility \\(WCAG 2.1 AA\\)\n\n- Sekcja 4: Core Rules \\(semantic HTML, keyboard nav, focus states\\)\n- Component Implementation Guidelines \\(images, modals, color contrast\\)\n- AI Automation for A11y \\(alt text generation\\)\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(where:*)",
+      "Bash(where convert:*)",
+      "Bash(xcopy \"temp-laravel\\\\*\" \"StronaLaravelSvelte\"\" /E /H /Y /I)",
+      "Bash(robocopy:*)",
+      "Bash(xcopy:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(php artisan:*)",
+      "Bash(composer require:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(findstr:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(cat:*)"
     ]
   }
 }
