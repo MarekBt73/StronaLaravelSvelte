@@ -1,140 +1,191 @@
 # Plan zadań - MedVita
 
-## Status: W trakcie realizacji
-**Data utworzenia:** 22.12.2024
+## Status projektu
+**Data aktualizacji:** 22.12.2024
+**Postęp ogólny:** ~35% ukończone
+
+```
+████████░░░░░░░░░░░░░░░░ 35%
+```
 
 ---
 
-## PRIORYTET 1: System ról użytkowników (rozpoczęty)
+## FAZA 1: Fundament ✅ UKOŃCZONA
 
-### 1.1 Dokończyć model User
-- [ ] Dodać stałe ról: `admin`, `lekarz`, `asystent`, `redaktor`, `technik`
-- [ ] Dodać metody pomocnicze: `isAdmin()`, `isDoctor()`, `isEditor()`, etc.
-- [ ] Dodać scope'y: `scopeActive()`, `scopeByRole()`
+### 1.1 Setup projektu ✅
+- [x] Laravel 11 + Inertia.js + Svelte 5
+- [x] Tailwind CSS z custom paletą "medical"
+- [x] Struktura folderów i routing
+- [x] MainLayout.svelte
 
-### 1.2 Utworzyć UserResource w Filament
-- [ ] Formularz tworzenia/edycji użytkownika
-- [ ] Lista użytkowników z filtrami (rola, status)
-- [ ] Walidacja: tylko admin może zarządzać użytkownikami
-- [ ] Upload avatara
+### 1.2 Strony statyczne ✅
+- [x] Home.svelte (strona główna)
+- [x] About.svelte (o nas)
+- [x] Services.svelte (usługi)
+- [x] Doctors.svelte (lekarze)
+- [x] Contact.svelte (kontakt)
+- [x] Legal/ (regulamin, prywatność, RODO)
 
-### 1.3 Polityki dostępu (Policies)
-- [ ] `UserPolicy` - tylko admin może CRUD użytkowników
-- [ ] `ArticlePolicy` - redaktor, admin, technik
-- [ ] `CategoryPolicy` - redaktor, admin, technik
-
-### 1.4 Konfiguracja nawigacji Filament
-- [ ] Ukryć menu "Użytkownicy" dla nie-adminów
-- [ ] Ukryć menu "Blog" dla lekarzy/asystentów
-- [ ] Dodać grupę "Wizyty" dla lekarzy/asystentów
+### 1.3 Grafiki i zasoby ✅
+- [x] Import grafik z media/ do public/images/
+- [x] Integracja zdjęć na wszystkich stronach
+- [x] Responsywny grid (mobile 1 kolumna)
 
 ---
 
-## PRIORYTET 2: System wizyt/spotkań
+## FAZA 2: Panel administracyjny ✅ UKOŃCZONA
 
-### 2.1 Migracje
-- [ ] `appointments` - wizyty pacjentów
-- [ ] `doctors` - profil lekarza (specjalizacja, godziny pracy)
-- [ ] `schedules` - grafik dostępności lekarzy
+### 2.1 Filament v3 ✅
+- [x] Instalacja Filament v3.3.45
+- [x] AdminPanelProvider
+- [x] Superuser: admin@medvita.pl / admin123
+
+### 2.2 System blogowy ✅
+- [x] Migracja: categories (typ: news/medical)
+- [x] Migracja: articles (SEO, featured image)
+- [x] Model Category + scopes
+- [x] Model Article + scopes
+- [x] CategoryResource (CRUD kategorii)
+- [x] ArticleResource (CRUD artykułów z rich editor)
+
+### 2.3 Sekcje na stronie głównej ✅
+- [x] Sekcja "Aktualności" (3 karty artykułów)
+- [x] Sekcja "Nasze placówki" (3 lokalizacje + mapa)
+
+---
+
+## FAZA 3: System ról 🔄 W TRAKCIE (aktualny etap)
+
+### 3.1 Migracja ról ✅
+- [x] Pole `role` w tabeli users
+- [x] Pole `is_active` w tabeli users
+- [x] Pole `phone`, `avatar`
+
+### 3.2 Model User ⏳ NASTĘPNY KROK
+- [ ] Stałe ról: ROLE_ADMIN, ROLE_DOCTOR, etc.
+- [ ] Metody: isAdmin(), isDoctor(), isEditor(), isTechnician(), isAssistant()
+- [ ] Scopes: scopeActive(), scopeByRole()
+
+### 3.3 UserResource w Filament ⏳
+- [ ] Formularz CRUD użytkowników
+- [ ] Walidacja: tylko admin zarządza userami
+- [ ] Lista z filtrami (rola, status aktywności)
+
+### 3.4 Polityki dostępu ⏳
+- [ ] UserPolicy - tylko admin
+- [ ] ArticlePolicy - redaktor, admin, technik
+- [ ] CategoryPolicy - redaktor, admin, technik
+
+### 3.5 Nawigacja Filament wg ról ⏳
+- [ ] Ukryć "Użytkownicy" dla nie-adminów
+- [ ] Ukryć "Blog" dla lekarzy/asystentów
+- [ ] Dodać grupę "Wizyty" (widoczna dla lekarzy/asystentów)
+
+---
+
+## FAZA 4: System wizyt 📋 ZAPLANOWANA
+
+### 4.1 Migracje
+- [ ] `doctors` - profil lekarza (specjalizacja, bio, godziny)
+- [ ] `schedules` - grafik dostępności
+- [ ] `appointments` - rezerwacje wizyt
 - [ ] `patients` - dane pacjentów (opcjonalnie)
 
-### 2.2 Modele Eloquent
-- [ ] `Doctor` - rozszerzenie User lub osobny model
-- [ ] `Appointment` - rezerwacja wizyty
-- [ ] `Schedule` - sloty czasowe
+### 4.2 Modele
+- [ ] Doctor (rozszerzenie User lub relacja)
+- [ ] Schedule (sloty czasowe)
+- [ ] Appointment (rezerwacja)
 
-### 2.3 Filament Resources
-- [ ] `AppointmentResource` - zarządzanie wizytami
-- [ ] `DoctorResource` - profil lekarza
-- [ ] `ScheduleResource` - grafik pracy
+### 4.3 Filament Resources
+- [ ] DoctorResource
+- [ ] ScheduleResource
+- [ ] AppointmentResource
 
 ---
 
-## PRIORYTET 3: Frontend - strona bloga
+## FAZA 5: Frontend bloga 📋 ZAPLANOWANA
 
-### 3.1 Strona listy artykułów `/blog`
-- [ ] Kontroler `BlogController`
-- [ ] Widok Svelte `Blog.svelte`
+### 5.1 Strona listy `/blog`
+- [ ] BlogController@index
+- [ ] Blog.svelte (lista artykułów)
 - [ ] Filtrowanie po kategorii
 - [ ] Paginacja
 
-### 3.2 Strona pojedynczego artykułu `/blog/{slug}`
-- [ ] Widok `BlogPost.svelte`
-- [ ] Schema.org JSON-LD dla artykułu
-- [ ] Dynamiczne meta tagi SEO
+### 5.2 Strona artykułu `/blog/{slug}`
+- [ ] BlogController@show
+- [ ] BlogPost.svelte
+- [ ] Schema.org JSON-LD
+- [ ] Dynamiczne meta SEO
 - [ ] Licznik wyświetleń
 
----
-
-## PRIORYTET 4: Integracja aktualności na stronie głównej
-
-### 4.1 Dynamiczne dane
-- [ ] Kontroler pobierający ostatnie 3 artykuły
+### 5.3 Integracja z homepage
+- [ ] Dynamiczne pobieranie ostatnich 3 artykułów
 - [ ] Przekazywanie przez Inertia props
-- [ ] Fallback gdy brak artykułów
 
 ---
 
-## PRIORYTET 5: Rezerwacja online (Booking Flow)
+## FAZA 6: Booking Flow 📋 ZAPLANOWANA
 
-### 5.1 Krok 1: Wybór specjalisty
-- [ ] Lista dostępnych lekarzy
-- [ ] Filtrowanie po specjalizacji
+### 6.1 Krok 1: Wybór specjalisty
+- [ ] Lista lekarzy z filtrami
+- [ ] Karty lekarzy ze specjalizacjami
 
-### 5.2 Krok 2: Wybór terminu
+### 6.2 Krok 2: Wybór terminu
 - [ ] Kalendarz dostępności
 - [ ] Wyświetlanie wolnych slotów
 
-### 5.3 Krok 3: Autoryzacja/dane
+### 6.3 Krok 3: Potwierdzenie
 - [ ] Logowanie/rejestracja pacjenta
-- [ ] Formularz danych kontaktowych
-- [ ] Potwierdzenie rezerwacji
+- [ ] Formularz danych
+- [ ] Email z potwierdzeniem
 
 ---
 
-## Notatki techniczne
+## Tabela ról
 
-### Dane logowania do panelu admin
-- **URL:** http://127.0.0.1:8000/admin
-- **Email:** admin@medvita.pl
-- **Hasło:** admin123
+| Rola | Użytkownicy | Artykuły | Kategorie | Wizyty | Grafik |
+|------|:-----------:|:--------:|:---------:|:------:|:------:|
+| admin | ✅ | ✅ | ✅ | ✅ | ✅ |
+| technik | ❌ | ✅ | ✅ | ✅ | ✅ |
+| redaktor | ❌ | ✅ | ✅ | ❌ | ❌ |
+| lekarz | ❌ | ❌ | ❌ | ✅ | ✅ |
+| asystent | ❌ | ❌ | ❌ | ✅ | ✅ |
 
-### Role użytkowników
-| Rola | Uprawnienia |
-|------|-------------|
-| `admin` | Pełny dostęp |
-| `technik` | Jak admin, ale bez zarządzania userami |
-| `redaktor` | Tylko artykuły i kategorie |
-| `lekarz` | Wizyty, terminy, grafik |
-| `asystent` | Wizyty, terminy, grafik |
+---
 
-### Komendy
+## Komendy deweloperskie
+
 ```bash
-# Uruchomienie serwera
+# Serwer Laravel
 php artisan serve
 
-# Uruchomienie Vite
+# Vite (frontend)
 npm run dev
 
 # Build produkcyjny
 npm run build
 
-# Tworzenie nowego użytkownika Filament
+# Nowy użytkownik Filament
 php artisan filament:make-user
+
+# Migracje
+php artisan migrate
 ```
 
 ---
 
-## Ukończone zadania (22.12.2024)
+## Dane dostępowe
 
-- [x] Instalacja Filament v3.3.45
-- [x] Migracje: categories, articles
-- [x] Modele: Category, Article
-- [x] Filament Resources: CategoryResource, ArticleResource
-- [x] Migracja: dodanie pola `role` do users
-- [x] Sekcja Aktualności na stronie głównej
-- [x] Sekcja Mapa lokalizacji na stronie głównej
-- [x] Kopiowanie grafik do public/images
-- [x] Integracja grafik na wszystkich stronach
-- [x] Fix grid mobilny (1 kolumna)
-- [x] Utworzenie superusera
+| Zasób | URL | Login | Hasło |
+|-------|-----|-------|-------|
+| Panel admin | http://127.0.0.1:8000/admin | admin@medvita.pl | admin123 |
+| Strona główna | http://127.0.0.1:8000 | - | - |
+
+---
+
+**Legenda:**
+- ✅ Ukończone
+- 🔄 W trakcie
+- ⏳ Następny krok
+- 📋 Zaplanowane
+- ❌ Brak dostępu
