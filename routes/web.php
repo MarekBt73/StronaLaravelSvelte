@@ -14,3 +14,37 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return Inertia::render('Home');
 })->name('home');
+
+Route::get('/o-nas', function () {
+    return Inertia::render('About');
+})->name('about');
+
+Route::get('/uslugi', function () {
+    return Inertia::render('Services');
+})->name('services');
+
+Route::get('/lekarze', function () {
+    return Inertia::render('Doctors');
+})->name('doctors');
+
+Route::get('/kontakt', function () {
+    return Inertia::render('Contact');
+})->name('contact');
+
+// Legal pages
+Route::get('/regulamin', function () {
+    return Inertia::render('Legal/Terms');
+})->name('legal.terms');
+
+Route::get('/polityka-prywatnosci', function () {
+    return Inertia::render('Legal/Privacy');
+})->name('legal.privacy');
+
+Route::get('/rodo', function () {
+    return Inertia::render('Legal/GDPR');
+})->name('legal.gdpr');
+
+// Placeholder for booking
+Route::get('/rezerwacja', function () {
+    return Inertia::render('Home'); // TODO: Booking page
+})->name('booking');

@@ -22,7 +22,8 @@
       "Bash(npm run build:*)",
       "Bash(findstr:*)",
       "Bash(npm cache clean:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(dir:*)"
     ]
   }
 }
