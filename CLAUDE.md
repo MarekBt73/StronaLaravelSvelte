@@ -62,18 +62,55 @@
 - **Alt Text Fallback:** In Filament resources, if `alt_text` is empty, trigger an Async Job to generate it via OpenAI Vision API.
 - **Video:** If video content is added, prioritize layouts that support transcripts/captions.
 
-## 5. Security & Privacy (GDPR/RODO)
+## 5. Performance & Mobile-First [CRITICAL]
+
+### Image Optimization
+- **Format:** ALL images must be WebP with fallback to original format.
+- **Responsive:** Generate 4 sizes: mobile (480px), tablet (768px), desktop (1200px), original (max 1920px).
+- **Lazy Loading:** Use `loading="lazy"` for images below the fold.
+- **Srcset:** Always provide srcset and sizes attributes:
+```svelte
+<img
+  src="/images/hero/doctor-desktop.webp"
+  srcset="/images/hero/doctor-mobile.webp 480w,
+          /images/hero/doctor-tablet.webp 768w,
+          /images/hero/doctor-desktop.webp 1200w"
+  sizes="(max-width: 480px) 480px, (max-width: 768px) 768px, 1200px"
+  alt="Lekarz w klinice MedVita"
+  loading="lazy"
+/>
+```
+
+### Mobile-First CSS
+- **Breakpoints (Tailwind):** Start with mobile, then add `md:` and `lg:` modifiers.
+- **Touch Targets:** Minimum 44x44px for all interactive elements.
+- **Font Sizes:** Base 16px, never smaller than 14px on mobile.
+
+### Core Web Vitals Targets
+| Metric | Target | Priority |
+|--------|--------|----------|
+| LCP (Largest Contentful Paint) | < 2.5s | P0 |
+| FID (First Input Delay) | < 100ms | P0 |
+| CLS (Cumulative Layout Shift) | < 0.1 | P0 |
+
+### Performance Rules
+- **No layout shifts:** Always set width/height or aspect-ratio on images.
+- **Critical CSS:** Inline above-the-fold styles.
+- **Fonts:** Use `font-display: swap` for Google Fonts.
+- **Bundle size:** Monitor with `npm run build -- --analyze`.
+
+## 6. Security & Privacy (GDPR/RODO)
 - **PII Data:** Never log patient data (PESEL, symptoms, names) in application logs.
 - **Authorization:** Use Laravel Policies strictly. A user can only see their own appointments.
 - **Files:** All medical uploads must go to S3 (Private Bucket), never `public` disk.
 
-## 6. Key Commands
+## 7. Key Commands
 - `php artisan serve` - Start backend.
 - `npm run dev` - Start Vite frontend watcher.
 - `php artisan filament:make-user` - Create admin user.
 - `php artisan inertia:start-ssr` - Debug SSR locally.
 
-## 7. Implementation roadmap (Current Focus)
+## 8. Implementation roadmap (Current Focus)
 - Setup Laravel with Inertia & Svelte adapter.
 - Install Filament v3 for "Doctors" and "Appointments" CRUD.
 - Implement Booking Flow (Step 1: Specialist, Step 2: Date, Step 3: Auth).
