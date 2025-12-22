@@ -42,18 +42,38 @@
 - **Meta Tags:** Dynamic generation via `seo-tags` package or custom helper.
 - **Content Structure:** Use clear "Key Takeaways" bullet points at the start of blog posts (LLM friendly).
 
-## 4. Security & Privacy (GDPR/RODO)
+## 4. Accessibility (WCAG 2.1 AA) & Inclusive Design [CRITICAL]
+
+### Core Rules
+- **Semantic HTML First:** Use `<button>` for actions, `<a>` for navigation. Never use `<div on:click>` without `role="button"` and keyboard event handlers.
+- **Keyboard Navigation:** Ensure ALL interactive elements are reachable via TAB key.
+- **Focus States:** Never set `outline: none` without providing a custom visible focus style (use Tailwind `focus-visible:ring`).
+- **Forms:** Every `<input>` must have a linked `<label>` (via `for` attribute or nesting). Placeholders are NOT labels.
+
+### Component Implementation Guidelines
+- **Images:**
+  - Decorative images: `alt=""` (empty string).
+  - Informative images: `alt="Description of content"`.
+  - Dynamic images (from DB): Use `alt={doctor.name + ' - zdjęcie profilowe'}`.
+- **Modals (Svelte):** Implement focus trapping. When modal opens, focus moves inside. When closed, focus returns to the trigger button.
+- **Color Contrast:** Ensure text/background ratio is at least 4.5:1. Avoid relying on color alone to convey state (e.g., error fields must have text/icon, not just red border).
+
+### AI Automation for A11y
+- **Alt Text Fallback:** In Filament resources, if `alt_text` is empty, trigger an Async Job to generate it via OpenAI Vision API.
+- **Video:** If video content is added, prioritize layouts that support transcripts/captions.
+
+## 5. Security & Privacy (GDPR/RODO)
 - **PII Data:** Never log patient data (PESEL, symptoms, names) in application logs.
 - **Authorization:** Use Laravel Policies strictly. A user can only see their own appointments.
 - **Files:** All medical uploads must go to S3 (Private Bucket), never `public` disk.
 
-## 5. Key Commands
+## 6. Key Commands
 - `php artisan serve` - Start backend.
 - `npm run dev` - Start Vite frontend watcher.
 - `php artisan filament:make-user` - Create admin user.
 - `php artisan inertia:start-ssr` - Debug SSR locally.
 
-## 6. Implementation roadmap (Current Focus)
+## 7. Implementation roadmap (Current Focus)
 - Setup Laravel with Inertia & Svelte adapter.
 - Install Filament v3 for "Doctors" and "Appointments" CRUD.
 - Implement Booking Flow (Step 1: Specialist, Step 2: Date, Step 3: Auth).
