@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -59,3 +60,6 @@ Route::get('/rodo', function () {
 Route::get('/rezerwacja', function () {
     return Inertia::render('Home'); // TODO: Booking page
 })->name('booking');
+
+// Global search API
+Route::get('/api/search', [SearchController::class, 'search'])->name('search');

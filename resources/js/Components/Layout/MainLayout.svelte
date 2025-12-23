@@ -1,10 +1,19 @@
 <script>
     import { inertia } from '@inertiajs/svelte';
+    import { router } from '@inertiajs/svelte';
 
     let { children } = $props();
 
     // Mobile menu state
     let mobileMenuOpen = $state(false);
+
+    // Search state
+    let searchOpen = $state(false);
+    let searchQuery = $state('');
+    let searchResults = $state([]);
+    let isSearching = $state(false);
+    let searchInputRef = $state(null);
+    let searchTimeout = $state(null);
 
     const navigation = [
         { name: 'Strona główna', href: '/' },
@@ -18,7 +27,6 @@
     // Toggle mobile menu
     function toggleMobileMenu() {
         mobileMenuOpen = !mobileMenuOpen;
-        // Prevent body scroll when menu is open
         if (mobileMenuOpen) {
             document.body.style.overflow = 'hidden';
         } else {
@@ -26,11 +34,66 @@
         }
     }
 
+    // Toggle search
+    function toggleSearch() {
+        searchOpen = !searchOpen;
+        if (searchOpen) {
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => searchInputRef?.focus(), 100);
+        } else {
+            document.body.style.overflow = '';
+            searchQuery = '';
+            searchResults = [];
+        }
+    }
+
+    // Close search
+    function closeSearch() {
+        searchOpen = false;
+        document.body.style.overflow = '';
+        searchQuery = '';
+        searchResults = [];
+    }
+
+    // Handle search input
+    function handleSearchInput() {
+        if (searchTimeout) clearTimeout(searchTimeout);
+
+        if (searchQuery.length < 2) {
+            searchResults = [];
+            return;
+        }
+
+        isSearching = true;
+        searchTimeout = setTimeout(async () => {
+            try {
+                const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
+                const data = await response.json();
+                searchResults = data.results || [];
+            } catch (error) {
+                console.error('Search error:', error);
+                searchResults = [];
+            } finally {
+                isSearching = false;
+            }
+        }, 300);
+    }
+
+    // Navigate to result
+    function goToResult(url) {
+        closeSearch();
+        router.visit(url);
+    }
+
     // Close menu on escape key
     function handleKeydown(event) {
-        if (event.key === 'Escape' && mobileMenuOpen) {
-            mobileMenuOpen = false;
-            document.body.style.overflow = '';
+        if (event.key === 'Escape') {
+            if (searchOpen) {
+                closeSearch();
+            } else if (mobileMenuOpen) {
+                mobileMenuOpen = false;
+                document.body.style.overflow = '';
+            }
         }
     }
 
@@ -38,6 +101,16 @@
     function closeMenu() {
         mobileMenuOpen = false;
         document.body.style.overflow = '';
+    }
+
+    // Get type icon
+    function getTypeIcon(type) {
+        switch (type) {
+            case 'article': return '📰';
+            case 'service': return '🏥';
+            case 'page': return '📄';
+            default: return '🔗';
+        }
     }
 </script>
 
@@ -126,6 +199,20 @@
 
             <!-- Right side buttons -->
             <div class="flex items-center gap-2 sm:gap-4">
+                <!-- Search button -->
+                <button
+                    type="button"
+                    onclick={toggleSearch}
+                    class="p-2 rounded-lg text-gray-600 hover:text-medical-600 hover:bg-gray-100
+                           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-medical-500
+                           transition-colors"
+                    aria-label="Otwórz wyszukiwarkę"
+                >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </button>
+
                 <!-- CTA Button - hidden on very small screens when menu button is shown -->
                 <a
                     href="/rezerwacja"
@@ -254,6 +341,121 @@
             </div>
         </div>
     {/if}
+
+    <!-- Search Modal -->
+    {#if searchOpen}
+        <!-- Backdrop -->
+        <div
+            class="fixed inset-0 bg-black/60 z-[60]"
+            onclick={closeSearch}
+            aria-hidden="true"
+        ></div>
+
+        <!-- Search Panel -->
+        <div
+            class="fixed inset-x-0 top-0 z-[70] bg-white shadow-2xl max-h-[80vh] overflow-hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Wyszukiwarka"
+        >
+            <div class="max-w-3xl mx-auto p-4">
+                <!-- Search Input -->
+                <div class="relative">
+                    <label for="global-search" class="sr-only">Szukaj w serwisie</label>
+                    <input
+                        type="search"
+                        id="global-search"
+                        bind:this={searchInputRef}
+                        bind:value={searchQuery}
+                        oninput={handleSearchInput}
+                        placeholder="Szukaj artykułów, usług, lekarzy..."
+                        class="w-full px-4 py-4 pl-12 pr-12 text-lg rounded-xl border-2 border-gray-200
+                               focus:border-medical-500 focus:outline-none focus:ring-4 focus:ring-medical-500/20
+                               transition-all"
+                    />
+                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <button
+                        type="button"
+                        onclick={closeSearch}
+                        class="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600
+                               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-medical-500 rounded"
+                        aria-label="Zamknij wyszukiwarkę"
+                    >
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Search Results -->
+                <div class="mt-4 max-h-[60vh] overflow-y-auto">
+                    {#if isSearching}
+                        <div class="text-center py-8 text-gray-500">
+                            <svg class="w-8 h-8 mx-auto animate-spin text-medical-600" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <p class="mt-2">Szukam...</p>
+                        </div>
+                    {:else if searchQuery.length >= 2 && searchResults.length === 0}
+                        <div class="text-center py-8 text-gray-500">
+                            <svg class="w-12 h-12 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p>Nie znaleziono wyników dla "<strong>{searchQuery}</strong>"</p>
+                            <p class="text-sm mt-1">Spróbuj innych słów kluczowych</p>
+                        </div>
+                    {:else if searchResults.length > 0}
+                        <ul class="divide-y divide-gray-100" role="listbox">
+                            {#each searchResults as result}
+                                <li>
+                                    <button
+                                        type="button"
+                                        onclick={() => goToResult(result.url)}
+                                        class="w-full text-left px-4 py-3 hover:bg-gray-50 focus:bg-medical-50
+                                               focus:outline-none transition-colors rounded-lg group"
+                                        role="option"
+                                    >
+                                        <div class="flex items-start gap-3">
+                                            <span class="text-2xl" aria-hidden="true">{getTypeIcon(result.type)}</span>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="flex items-center gap-2 mb-1">
+                                                    <span class="font-medium text-gray-900 group-hover:text-medical-600 transition-colors">
+                                                        {result.title}
+                                                    </span>
+                                                    <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full">
+                                                        {result.category}
+                                                    </span>
+                                                </div>
+                                                {#if result.excerpt}
+                                                    <p class="text-sm text-gray-500 line-clamp-2">{result.excerpt}</p>
+                                                {/if}
+                                            </div>
+                                            <svg class="w-5 h-5 text-gray-400 group-hover:text-medical-600 transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </div>
+                                    </button>
+                                </li>
+                            {/each}
+                        </ul>
+                    {:else if searchQuery.length < 2}
+                        <div class="text-center py-8 text-gray-500">
+                            <p>Wpisz co najmniej 2 znaki, aby wyszukać</p>
+                            <p class="text-sm mt-2 text-gray-400">Przeszukuj artykuły, usługi i strony</p>
+                        </div>
+                    {/if}
+                </div>
+
+                <!-- Keyboard hint -->
+                <div class="mt-4 pt-4 border-t border-gray-100 text-center text-sm text-gray-400">
+                    Naciśnij <kbd class="px-2 py-1 bg-gray-100 rounded text-gray-600">ESC</kbd> aby zamknąć
+                </div>
+            </div>
+        </div>
+    {/if}
 </header>
 
 <!-- Main Content -->
@@ -326,3 +528,13 @@
         </div>
     </div>
 </footer>
+
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
