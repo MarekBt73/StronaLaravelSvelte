@@ -16,6 +16,20 @@ Route::get('/health', function () {
     return response()->json(['status' => 'ok', 'timestamp' => now()->toIso8601String()]);
 })->name('health');
 
+// Mail config check (remove after testing!)
+Route::get('/mail-config', function () {
+    return response()->json([
+        'mailer' => config('mail.default'),
+        'host' => config('mail.mailers.smtp.host'),
+        'port' => config('mail.mailers.smtp.port'),
+        'username' => config('mail.mailers.smtp.username') ? 'SET' : 'NOT SET',
+        'password' => config('mail.mailers.smtp.password') ? 'SET' : 'NOT SET',
+        'encryption' => config('mail.mailers.smtp.encryption'),
+        'from_address' => config('mail.from.address'),
+        'from_name' => config('mail.from.name'),
+    ]);
+});
+
 // Test email endpoint (remove in production after testing!)
 Route::get('/test-email', function (\Illuminate\Http\Request $request) {
     $email = $request->query('to', 'kontakt@becht.pl');
