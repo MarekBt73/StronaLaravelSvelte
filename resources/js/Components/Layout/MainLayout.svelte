@@ -173,13 +173,13 @@
         ></div>
 
         <!-- Menu panel -->
-        <nav
+        <div
             id="mobile-menu"
             class="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-white z-50 lg:hidden
                    shadow-2xl overflow-y-auto"
-            aria-label="Menu mobilne"
             role="dialog"
             aria-modal="true"
+            aria-label="Menu mobilne"
         >
             <!-- Menu header -->
             <div class="flex items-center justify-between p-4 border-b border-gray-100">
@@ -252,7 +252,7 @@
                     Pon-Pt: 8:00-20:00 | Sob: 9:00-14:00
                 </p>
             </div>
-        </nav>
+        </div>
     {/if}
 </header>
 
@@ -262,7 +262,7 @@
 </main>
 
 <!-- Footer -->
-<footer class="bg-medical-900 text-white" role="contentinfo">
+<footer class="bg-medical-900 text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <!-- About -->

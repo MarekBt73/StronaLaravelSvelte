@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use App\Filament\Resources\ArticleResource\Pages;
 use App\Models\Article;
 use App\Models\Category;
@@ -54,24 +55,13 @@ class ArticleResource extends Resource
                                     ->rows(3)
                                     ->helperText('Krótki opis wyświetlany na liście artykułów'),
 
-                                Forms\Components\RichEditor::make('content')
+                                TinyEditor::make('content')
                                     ->label('Treść')
                                     ->required()
                                     ->columnSpanFull()
-                                    ->toolbarButtons([
-                                        'bold',
-                                        'italic',
-                                        'underline',
-                                        'strike',
-                                        'link',
-                                        'orderedList',
-                                        'bulletList',
-                                        'h2',
-                                        'h3',
-                                        'blockquote',
-                                        'redo',
-                                        'undo',
-                                    ]),
+                                    ->profile('full')
+                                    ->showMenuBar()
+                                    ->minHeight(500),
                             ])
                             ->columns(2),
 

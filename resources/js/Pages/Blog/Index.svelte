@@ -4,7 +4,12 @@
 
     let { articles, categories, filters, currentCategory = null } = $props();
 
-    let searchQuery = $state(filters.search || '');
+    // Use $derived for reactive computed values based on props
+    let pageTitle = $derived(currentCategory ? `${currentCategory.name} - Blog MedVita` : 'Blog MedVita');
+    let pageDescription = $derived(currentCategory?.description || 'Aktualności, porady zdrowotne i informacje medyczne od specjalistów MedVita.');
+    let baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+
+    let searchQuery = $state(filters?.search || '');
     let isSearching = $state(false);
 
     function handleSearch(e) {
@@ -56,7 +61,24 @@
     }
 </script>
 
-<MainLayout title={currentCategory ? `${currentCategory.name} - Blog` : 'Blog'}>
+<svelte:head>
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content="{baseUrl}/images/og-blog.jpg" />
+    <meta property="og:site_name" content="MedVita" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+</svelte:head>
+
+<MainLayout>
     <!-- Hero Section -->
     <section class="bg-gradient-to-br from-medical-600 to-medical-800 text-white py-12 lg:py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

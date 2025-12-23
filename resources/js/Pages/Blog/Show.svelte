@@ -3,6 +3,11 @@
 
     let { article, related } = $props();
 
+    // Build full URL for OG image - use $derived for reactive values from props
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+    let ogImage = $derived(article.featured_image ? `${baseUrl}/storage/${article.featured_image}` : `${baseUrl}/images/og-default.jpg`);
+    const pageUrl = typeof window !== 'undefined' ? window.location.href : '';
+
     function formatDate(dateString) {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -37,7 +42,30 @@
     }
 </script>
 
-<MainLayout title={article.meta_title || article.title} description={article.meta_description || article.excerpt}>
+<svelte:head>
+    <title>{article.meta_title || article.title} | MedVita Blog</title>
+    <meta name="description" content={article.meta_description || article.excerpt || ''} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content={article.meta_title || article.title} />
+    <meta property="og:description" content={article.meta_description || article.excerpt || ''} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:site_name" content="MedVita" />
+    <meta property="article:published_time" content={article.published_at} />
+    {#if article.author}
+        <meta property="article:author" content={article.author.name} />
+    {/if}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={article.meta_title || article.title} />
+    <meta name="twitter:description" content={article.meta_description || article.excerpt || ''} />
+    <meta name="twitter:image" content={ogImage} />
+</svelte:head>
+
+<MainLayout>
     <!-- Article Header -->
     <article>
         <header class="bg-gradient-to-br from-medical-600 to-medical-800 text-white py-12 lg:py-16">
@@ -141,11 +169,11 @@
                         </button>
                         <button
                             onclick={shareOnTwitter}
-                            class="w-10 h-10 rounded-full bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center transition-colors"
-                            aria-label="Udostępnij na Twitter"
+                            class="w-10 h-10 rounded-full bg-black hover:bg-gray-800 text-white flex items-center justify-center transition-colors"
+                            aria-label="Udostępnij na X"
                         >
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                             </svg>
                         </button>
                         <button
@@ -195,9 +223,9 @@
                             </button>
                             <button
                                 onclick={shareOnTwitter}
-                                class="flex-1 py-2 rounded-lg bg-sky-500 hover:bg-sky-600 text-white text-sm font-medium transition-colors"
+                                class="flex-1 py-2 rounded-lg bg-black hover:bg-gray-800 text-white text-sm font-medium transition-colors"
                             >
-                                Twitter
+                                X
                             </button>
                             <button
                                 onclick={copyLink}

@@ -1,13 +1,19 @@
 # Project Context: Medical Clinic Platform (Laravel + Svelte)
 
+## Dodatkowe instrukcje
+- [Content & GEO Guidelines](docs/CONTENT_GEO_GUIDELINES.md) - Wytyczne dla tresci blogowych, SEO i optymalizacji pod AI
+
 ## 1. Project Overview
 - **Type:** Medical Clinic Management System & SEO-Optimized Marketing Site.
-- **Stack:** - **Backend:** Laravel 11.x (PHP 8.2+).
-  - **Frontend:** Svelte 4/5 (via Inertia.js).
-  - **Admin Panel:** Filament PHP v3.
-  - **Database:** PostgreSQL (Supabase/Railway).
-  - **Styling:** Tailwind CSS.
-  - **Infrastructure:** Railway (Dockerized).
+- **Stack:**
+  - **Backend:** Laravel 11.x (PHP 8.2+)
+  - **Frontend:** Svelte 5 (via Inertia.js)
+  - **Admin Panel:** Filament PHP v3 + TinyMCE Editor
+  - **Database:** MySQL (dhosting.pl) / PostgreSQL (Railway)
+  - **Styling:** Tailwind CSS
+  - **Infrastructure:** dhosting.pl (produkcja)
+  - **Production URL:** https://medvita.becht.pl/laravel
+  - **Image Processing:** Intervention/Image (WebP, responsive sizes)
 
 ## 2. Architecture & Patterns
 
