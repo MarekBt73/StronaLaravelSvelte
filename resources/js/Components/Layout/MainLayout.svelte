@@ -11,6 +11,7 @@
         { name: 'O nas', href: '/o-nas' },
         { name: 'Usługi', href: '/uslugi' },
         { name: 'Lekarze', href: '/lekarze' },
+        { name: 'Blog', href: '/blog' },
         { name: 'Kontakt', href: '/kontakt' },
     ];
 
@@ -285,6 +286,7 @@
                     <li><a href="/o-nas" use:inertia class="hover:text-white transition-colors focus-visible:outline-none focus-visible:underline">O nas</a></li>
                     <li><a href="/uslugi" use:inertia class="hover:text-white transition-colors focus-visible:outline-none focus-visible:underline">Usługi</a></li>
                     <li><a href="/lekarze" use:inertia class="hover:text-white transition-colors focus-visible:outline-none focus-visible:underline">Nasi lekarze</a></li>
+                    <li><a href="/blog" use:inertia class="hover:text-white transition-colors focus-visible:outline-none focus-visible:underline">Blog</a></li>
                     <li><a href="/kontakt" use:inertia class="hover:text-white transition-colors focus-visible:outline-none focus-visible:underline">Kontakt</a></li>
                 </ul>
             </div>
