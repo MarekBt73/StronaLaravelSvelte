@@ -158,23 +158,27 @@
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {#each services as service}
                     <a
                         href={service.href}
-                        class="bg-gray-50 rounded-xl p-6 text-center hover:shadow-lg
+                        class="bg-gray-50 rounded-xl p-4 sm:p-6 text-center hover:shadow-lg
                                transition-all duration-200 block hover:-translate-y-1
-                               focus-visible:ring-2 focus-visible:ring-medical-500"
+                               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-medical-500
+                               focus-visible:ring-offset-2"
+                        aria-label="{service.name} - {service.description}"
                     >
-                        <div class="w-20 h-20 mx-auto mb-4">
+                        <div class="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 mx-auto mb-3 sm:mb-4">
                             <img
                                 src={service.image}
-                                alt={service.name}
+                                alt=""
+                                aria-hidden="true"
                                 class="w-full h-full object-contain"
+                                loading="lazy"
                             />
                         </div>
-                        <h3 class="font-semibold text-gray-900 mb-2">{service.name}</h3>
-                        <p class="text-sm text-gray-600">{service.description}</p>
+                        <h3 class="font-semibold text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">{service.name}</h3>
+                        <p class="text-xs sm:text-sm text-gray-600">{service.description}</p>
                     </a>
                 {/each}
             </div>
@@ -190,18 +194,20 @@
                 </h2>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
                 {#each features as feature}
-                    <div class="bg-white rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow">
-                        <div class="w-16 h-16 mb-4">
+                    <div class="bg-white rounded-xl p-6 sm:p-8 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 sm:w-16 sm:h-16 mb-3 sm:mb-4">
                             <img
                                 src={feature.image}
-                                alt={feature.title}
+                                alt=""
+                                aria-hidden="true"
                                 class="w-full h-full object-contain"
+                                loading="lazy"
                             />
                         </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                        <p class="text-gray-600">{feature.description}</p>
+                        <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">{feature.title}</h3>
+                        <p class="text-sm sm:text-base text-gray-600">{feature.description}</p>
                     </div>
                 {/each}
             </div>
