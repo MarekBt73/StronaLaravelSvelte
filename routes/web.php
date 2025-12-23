@@ -20,14 +20,27 @@ Route::get('/health', function () {
 Route::get('/test-email', function (\Illuminate\Http\Request $request) {
     $email = $request->query('to', 'kontakt@becht.pl');
 
+    // Show configuration info
+    $config = [
+        'mailer' => config('mail.default'),
+        'host' => config('mail.mailers.smtp.host'),
+        'port' => config('mail.mailers.smtp.port'),
+        'from' => config('mail.from.address'),
+    ];
+
     try {
         \Illuminate\Support\Facades\Mail::raw(
             "Test email z MedVita.\n\nData: " . now()->format('Y-m-d H:i:s'),
             fn($message) => $message->to($email)->subject('Test MedVita')
         );
-        return response()->json(['status' => 'sent', 'to' => $email]);
+        return response()->json(['status' => 'sent', 'to' => $email, 'config' => $config]);
     } catch (\Exception $e) {
-        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        return response()->json([
+            'status' => 'error',
+            'to' => $email,
+            'config' => $config,
+            'error' => $e->getMessage(),
+        ], 500);
     }
 })->name('test.email');
 
