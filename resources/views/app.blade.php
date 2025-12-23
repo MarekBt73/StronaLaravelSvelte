@@ -7,6 +7,25 @@
 
     <title inertia>{{ config('app.name', 'MedVita') }}</title>
 
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#0891b2">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="MedVita">
+    <meta name="application-name" content="MedVita">
+    <meta name="msapplication-TileColor" content="#0891b2">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-192x192.png">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,6 +33,7 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-72x72.png">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @inertiaHead

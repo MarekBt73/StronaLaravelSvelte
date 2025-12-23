@@ -168,7 +168,7 @@
                                focus-visible:ring-offset-2"
                         aria-label="{service.name} - {service.description}"
                     >
-                        <div class="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 mx-auto mb-3 sm:mb-4">
+                        <div class="w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 mx-auto mb-3 sm:mb-4">
                             <img
                                 src={service.image}
                                 alt=""
