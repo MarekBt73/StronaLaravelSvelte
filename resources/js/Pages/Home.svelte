@@ -162,13 +162,20 @@
                 {#each services as service}
                     <a
                         href={service.href}
-                        class="bg-gray-50 rounded-xl p-4 sm:p-6 text-center hover:shadow-lg
+                        class="bg-gray-50 rounded-xl p-4 sm:p-6 hover:shadow-lg
                                transition-all duration-200 block hover:-translate-y-1
                                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-medical-500
-                               focus-visible:ring-offset-2"
+                               focus-visible:ring-offset-2
+                               flex flex-row sm:flex-col items-center gap-4 sm:gap-0"
                         aria-label="{service.name} - {service.description}"
                     >
-                        <div class="w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 mx-auto mb-3 sm:mb-4">
+                        <!-- Mobile: tekst po lewej -->
+                        <div class="flex-1 text-left sm:text-center sm:order-2">
+                            <h3 class="font-semibold text-gray-900 mb-1 text-base sm:text-lg">{service.name}</h3>
+                            <p class="text-sm text-gray-600">{service.description}</p>
+                        </div>
+                        <!-- Mobile: obrazek po prawej, Desktop: obrazek na górze -->
+                        <div class="w-24 h-24 sm:w-40 sm:h-40 lg:w-48 lg:h-48 flex-shrink-0 sm:mx-auto sm:mb-4 sm:order-1">
                             <img
                                 src={service.image}
                                 alt=""
@@ -177,8 +184,6 @@
                                 loading="lazy"
                             />
                         </div>
-                        <h3 class="font-semibold text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">{service.name}</h3>
-                        <p class="text-xs sm:text-sm text-gray-600">{service.description}</p>
                     </a>
                 {/each}
             </div>
