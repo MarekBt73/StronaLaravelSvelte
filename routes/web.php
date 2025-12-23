@@ -16,6 +16,19 @@ Route::get('/health', function () {
     return response()->json(['status' => 'ok', 'timestamp' => now()->toIso8601String()]);
 })->name('health');
 
+// Test email endpoint (remove in production after testing!)
+Route::get('/test-email/{email}', function (string $email) {
+    try {
+        \Illuminate\Support\Facades\Mail::raw(
+            "Test email z MedVita.\n\nData: " . now()->format('Y-m-d H:i:s'),
+            fn($message) => $message->to($email)->subject('Test MedVita')
+        );
+        return response()->json(['status' => 'sent', 'to' => $email]);
+    } catch (\Exception $e) {
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    }
+})->name('test.email');
+
 Route::get('/', function () {
     return Inertia::render('Home');
 })->name('home');
