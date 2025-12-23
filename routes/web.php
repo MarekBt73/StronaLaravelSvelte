@@ -17,7 +17,9 @@ Route::get('/health', function () {
 })->name('health');
 
 // Test email endpoint (remove in production after testing!)
-Route::get('/test-email/{email}', function (string $email) {
+Route::get('/test-email', function (\Illuminate\Http\Request $request) {
+    $email = $request->query('to', 'kontakt@becht.pl');
+
     try {
         \Illuminate\Support\Facades\Mail::raw(
             "Test email z MedVita.\n\nData: " . now()->format('Y-m-d H:i:s'),
