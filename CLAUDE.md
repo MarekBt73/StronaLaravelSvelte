@@ -1,7 +1,21 @@
 # Project Context: Medical Clinic Platform (Laravel + Svelte)
 
-## Dodatkowe instrukcje
-- [Content & GEO Guidelines](docs/CONTENT_GEO_GUIDELINES.md) - Wytyczne dla tresci blogowych, SEO i optymalizacji pod AI
+## Dokumentacja projektu
+
+Lista wszystkich instrukcji i dokumentow w projekcie:
+
+| Plik | Opis |
+|------|------|
+| [CLAUDE.md](CLAUDE.md) | Glowne instrukcje dla AI - architektura, standardy, wytyczne |
+| [TASK_PLAN.md](TASK_PLAN.md) | Plan zadan i postep prac (~70% ukonczony) |
+| [PLAN_PROJEKTU.md](PLAN_PROJEKTU.md) | Ogolny plan projektu |
+| [DEPLOY_DHOSTING.md](DEPLOY_DHOSTING.md) | Instrukcja deploymentu na dhosting.pl |
+| [BRANDING.md](BRANDING.md) | Wytyczne brandingowe (kolory, logo, styl) |
+| [ASSETS.md](ASSETS.md) | Lista zasobow graficznych |
+| [README.md](README.md) | Opis projektu Laravel |
+| [docs/CONTENT_GEO_GUIDELINES.md](docs/CONTENT_GEO_GUIDELINES.md) | Wytyczne SEO/GEO dla tresci blogowych |
+
+**WAZNE:** Przed rozpoczeciem pracy zapoznaj sie z odpowiednimi dokumentami powyzej.
 
 ## 1. Project Overview
 - **Type:** Medical Clinic Management System & SEO-Optimized Marketing Site.
