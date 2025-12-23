@@ -165,6 +165,16 @@ class UserResource extends Resource
                     ->boolean()
                     ->sortable(),
 
+                Tables\Columns\IconColumn::make('email_verified_at')
+                    ->label('Email')
+                    ->boolean()
+                    ->getStateUsing(fn (User $record) => $record->hasVerifiedEmail())
+                    ->trueIcon('heroicon-o-check-badge')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->trueColor('success')
+                    ->falseColor('danger')
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Utworzono')
                     ->dateTime('d.m.Y H:i')
@@ -186,6 +196,38 @@ class UserResource extends Resource
                     ->label('Status aktywności'),
             ])
             ->actions([
+                Tables\Actions\Action::make('sendVerification')
+                    ->label('Wyślij weryfikację')
+                    ->icon('heroicon-o-envelope')
+                    ->color('info')
+                    ->requiresConfirmation()
+                    ->modalHeading('Wyślij email weryfikacyjny')
+                    ->modalDescription('Czy wysłać email z linkiem weryfikacyjnym do tego użytkownika?')
+                    ->visible(fn (User $record) => !$record->hasVerifiedEmail())
+                    ->action(function (User $record) {
+                        $record->sendEmailVerificationNotification();
+                        \Filament\Notifications\Notification::make()
+                            ->title('Email wysłany')
+                            ->body('Link weryfikacyjny został wysłany na adres ' . $record->email)
+                            ->success()
+                            ->send();
+                    }),
+                Tables\Actions\Action::make('verifyManually')
+                    ->label('Zweryfikuj ręcznie')
+                    ->icon('heroicon-o-check-badge')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Ręczna weryfikacja')
+                    ->modalDescription('Czy oznaczyć email tego użytkownika jako zweryfikowany?')
+                    ->visible(fn (User $record) => !$record->hasVerifiedEmail())
+                    ->action(function (User $record) {
+                        $record->markEmailAsVerified();
+                        \Filament\Notifications\Notification::make()
+                            ->title('Email zweryfikowany')
+                            ->body('Adres ' . $record->email . ' został oznaczony jako zweryfikowany.')
+                            ->success()
+                            ->send();
+                    }),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()

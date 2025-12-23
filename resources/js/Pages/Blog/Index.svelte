@@ -11,6 +11,15 @@
 
     let searchQuery = $state(filters?.search || '');
     let isSearching = $state(false);
+    let isSearchOpen = $state(false);
+    let searchInputRef = $state(null);
+
+    function toggleSearch() {
+        isSearchOpen = !isSearchOpen;
+        if (isSearchOpen && searchInputRef) {
+            setTimeout(() => searchInputRef?.focus(), 100);
+        }
+    }
 
     function handleSearch(e) {
         e.preventDefault();
@@ -79,60 +88,95 @@
 </svelte:head>
 
 <MainLayout>
-    <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-medical-600 to-medical-800 text-white py-12 lg:py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <h1 class="text-3xl lg:text-4xl font-bold mb-4">
-                    {#if currentCategory}
-                        {currentCategory.name}
-                    {:else}
-                        Blog MedVita
-                    {/if}
-                </h1>
-                <p class="text-lg text-medical-100 max-w-2xl mx-auto">
-                    {#if currentCategory && currentCategory.description}
-                        {currentCategory.description}
-                    {:else}
-                        Aktualności, porady zdrowotne i informacje medyczne od naszych specjalistów
-                    {/if}
-                </p>
-            </div>
+    <!-- Hero Section with Background Image -->
+    <section class="relative bg-medical-600 text-white overflow-hidden">
+        <img
+            src="/images/beautiful-female-therapist-clinic.jpg"
+            alt=""
+            class="absolute inset-0 w-full h-full object-cover"
+        />
+        <div class="absolute inset-0 bg-gradient-to-r from-medical-800/95 via-medical-700/85 to-medical-600/70"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+                <div class="flex-1">
+                    <h1 class="text-3xl lg:text-4xl xl:text-5xl font-bold mb-3">
+                        {#if currentCategory}
+                            {currentCategory.name}
+                        {:else}
+                            Blog MedVita
+                        {/if}
+                    </h1>
+                    <p class="text-base lg:text-xl text-medical-100 max-w-2xl">
+                        {#if currentCategory && currentCategory.description}
+                            {currentCategory.description}
+                        {:else}
+                            Aktualności, porady zdrowotne i informacje medyczne od naszych specjalistów
+                        {/if}
+                    </p>
+                </div>
 
-            <!-- Search Form -->
-            <div class="mt-8 max-w-xl mx-auto">
-                <form onsubmit={handleSearch} class="relative">
-                    <label for="search" class="sr-only">Szukaj artykułów</label>
-                    <input
-                        type="search"
-                        id="search"
-                        bind:value={searchQuery}
-                        placeholder="Szukaj artykułów..."
-                        class="w-full px-4 py-3 pl-12 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
-                    />
-                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    {#if searchQuery}
+                <!-- Search Button / Expandable Search -->
+                <div class="flex items-center gap-3 self-start sm:self-center">
+                    {#if isSearchOpen}
+                        <form onsubmit={handleSearch} class="flex items-center gap-2 animate-fade-in">
+                            <div class="relative">
+                                <label for="search" class="sr-only">Szukaj artykułów</label>
+                                <input
+                                    type="search"
+                                    id="search"
+                                    bind:this={searchInputRef}
+                                    bind:value={searchQuery}
+                                    placeholder="Szukaj..."
+                                    class="w-40 sm:w-64 md:w-80 px-4 py-2.5 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                                />
+                                {#if searchQuery}
+                                    <button
+                                        type="button"
+                                        onclick={clearSearch}
+                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                        aria-label="Wyczyść wyszukiwanie"
+                                    >
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                {/if}
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={isSearching}
+                                class="bg-amber-500 hover:bg-amber-600 text-white px-3 sm:px-4 py-2.5 rounded-lg transition-colors disabled:opacity-50 font-medium min-w-[44px]"
+                                aria-label={isSearching ? 'Szukam...' : 'Szukaj'}
+                            >
+                                <span class="hidden sm:inline">{isSearching ? '...' : 'Szukaj'}</span>
+                                <svg class="w-5 h-5 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </button>
+                            <button
+                                type="button"
+                                onclick={toggleSearch}
+                                class="p-2.5 rounded-lg bg-white/10 hover:bg-white/20 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                                aria-label="Zamknij wyszukiwarkę"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </form>
+                    {:else}
                         <button
                             type="button"
-                            onclick={clearSearch}
-                            class="absolute right-14 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                            aria-label="Wyczyść wyszukiwanie"
+                            onclick={toggleSearch}
+                            class="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white min-w-[48px] min-h-[48px] flex items-center justify-center"
+                            aria-label="Otwórz wyszukiwarkę"
                         >
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </button>
                     {/if}
-                    <button
-                        type="submit"
-                        disabled={isSearching}
-                        class="absolute right-2 top-1/2 -translate-y-1/2 bg-amber-500 hover:bg-amber-600 text-white px-4 py-1.5 rounded-md transition-colors disabled:opacity-50"
-                    >
-                        {isSearching ? 'Szukam...' : 'Szukaj'}
-                    </button>
-                </form>
+                </div>
             </div>
         </div>
     </section>
@@ -339,9 +383,25 @@
 </MainLayout>
 
 <style>
+    .animate-fade-in {
+        animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
     .line-clamp-2 {
         display: -webkit-box;
         -webkit-line-clamp: 2;
+        line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
@@ -349,6 +409,7 @@
     .line-clamp-3 {
         display: -webkit-box;
         -webkit-line-clamp: 3;
+        line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
