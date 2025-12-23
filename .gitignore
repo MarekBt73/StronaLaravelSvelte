@@ -1,6 +1,6 @@
 /.phpunit.cache
 /node_modules
-/public/build
+# /public/build  # Odkomentuj dla developerki, skomentowane dla dhosting
 /public/hot
 /public/storage
 /storage/*.key
