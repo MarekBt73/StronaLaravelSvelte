@@ -114,3 +114,6 @@
 - Setup Laravel with Inertia & Svelte adapter.
 - Install Filament v3 for "Doctors" and "Appointments" CRUD.
 - Implement Booking Flow (Step 1: Specialist, Step 2: Date, Step 3: Auth).
+
+## Comunication
+Komunikuj się wyłącznie w języku polskim.

@@ -1,11 +1,11 @@
 # Plan zadań - MedVita
 
 ## Status projektu
-**Data aktualizacji:** 22.12.2024
-**Postęp ogólny:** ~35% ukończone
+**Data aktualizacji:** 23.12.2024
+**Postęp ogólny:** ~50% ukończone
 
 ```
-████████░░░░░░░░░░░░░░░░ 35%
+████████████░░░░░░░░░░░░ 50%
 ```
 
 ---
@@ -54,36 +54,40 @@
 
 ---
 
-## FAZA 3: System ról 🔄 W TRAKCIE (aktualny etap)
+## FAZA 3: System ról ✅ UKOŃCZONA
 
 ### 3.1 Migracja ról ✅
 - [x] Pole `role` w tabeli users
 - [x] Pole `is_active` w tabeli users
 - [x] Pole `phone`, `avatar`
 
-### 3.2 Model User ⏳ NASTĘPNY KROK
-- [ ] Stałe ról: ROLE_ADMIN, ROLE_DOCTOR, etc.
-- [ ] Metody: isAdmin(), isDoctor(), isEditor(), isTechnician(), isAssistant()
-- [ ] Scopes: scopeActive(), scopeByRole()
+### 3.2 Model User ✅
+- [x] Stałe ról: ROLE_ADMIN, ROLE_DOCTOR, etc.
+- [x] Metody: isAdmin(), isDoctor(), isEditor(), isTechnician(), isAssistant()
+- [x] Metody uprawnień: canManageUsers(), canManageBlog(), canManageAppointments()
+- [x] Scopes: scopeActive(), scopeByRole(), scopeAdmins(), scopeDoctors(), scopeEditors()
+- [x] Implementacja FilamentUser interface
 
-### 3.3 UserResource w Filament ⏳
-- [ ] Formularz CRUD użytkowników
-- [ ] Walidacja: tylko admin zarządza userami
-- [ ] Lista z filtrami (rola, status aktywności)
+### 3.3 UserResource w Filament ✅
+- [x] Formularz CRUD użytkowników
+- [x] Walidacja: tylko admin zarządza userami (canAccess)
+- [x] Lista z filtrami (rola, status aktywności)
+- [x] Kolorowe badge dla ról
+- [x] Placeholder dla avatara (ui-avatars.com)
 
-### 3.4 Polityki dostępu ⏳
-- [ ] UserPolicy - tylko admin
-- [ ] ArticlePolicy - redaktor, admin, technik
-- [ ] CategoryPolicy - redaktor, admin, technik
+### 3.4 Polityki dostępu ✅
+- [x] UserPolicy - tylko admin
+- [x] ArticlePolicy - redaktor, admin, technik
+- [x] CategoryPolicy - redaktor, admin, technik
 
-### 3.5 Nawigacja Filament wg ról ⏳
-- [ ] Ukryć "Użytkownicy" dla nie-adminów
-- [ ] Ukryć "Blog" dla lekarzy/asystentów
-- [ ] Dodać grupę "Wizyty" (widoczna dla lekarzy/asystentów)
+### 3.5 Nawigacja Filament wg ról ✅
+- [x] Ukryć "Użytkownicy" dla nie-adminów
+- [x] Ukryć "Blog" dla lekarzy/asystentów
+- [ ] Dodać grupę "Wizyty" (widoczna dla lekarzy/asystentów) → przeniesione do FAZA 4
 
 ---
 
-## FAZA 4: System wizyt 📋 ZAPLANOWANA
+## FAZA 4: System wizyt ⏳ NASTĘPNY ETAP
 
 ### 4.1 Migracje
 - [ ] `doctors` - profil lekarza (specjalizacja, bio, godziny)
@@ -100,6 +104,7 @@
 - [ ] DoctorResource
 - [ ] ScheduleResource
 - [ ] AppointmentResource
+- [ ] Grupa nawigacji "Wizyty" (widoczna dla lekarzy/asystentów)
 
 ---
 
