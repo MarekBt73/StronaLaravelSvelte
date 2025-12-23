@@ -1,2 +1,20 @@
+# Robots.txt for demo/presentation site
+# Block all robots - this is a demonstration website
+
 User-agent: *
-Disallow:
+Disallow: /
+
+# Block specific crawlers explicitly
+User-agent: Googlebot
+Disallow: /
+
+User-agent: Bingbot
+Disallow: /
+
+User-agent: Yandex
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+# No sitemap - this is a demo site

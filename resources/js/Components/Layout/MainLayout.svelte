@@ -15,6 +15,28 @@
     let searchInputRef = $state(null);
     let searchTimeout = $state(null);
 
+    // Demo popup state
+    let showDemoPopup = $state(false);
+
+    // Show demo popup after 10 seconds (only if not dismissed before)
+    $effect(() => {
+        if (typeof window !== 'undefined') {
+            const dismissed = localStorage.getItem('demoPopupDismissed');
+            if (!dismissed) {
+                const timer = setTimeout(() => {
+                    showDemoPopup = true;
+                }, 10000);
+                return () => clearTimeout(timer);
+            }
+        }
+    });
+
+    // Close demo popup
+    function closeDemoPopup() {
+        showDemoPopup = false;
+        localStorage.setItem('demoPopupDismissed', 'true');
+    }
+
     const navigation = [
         { name: 'Strona główna', href: '/' },
         { name: 'O nas', href: '/o-nas' },
@@ -529,7 +551,101 @@
     </div>
 </footer>
 
+<!-- Demo Site Popup -->
+{#if showDemoPopup}
+    <!-- Backdrop -->
+    <div
+        class="fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4"
+        onclick={closeDemoPopup}
+        role="presentation"
+    >
+        <!-- Popup -->
+        <div
+            class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 sm:p-8 relative animate-popup"
+            onclick={(e) => e.stopPropagation()}
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="demo-popup-title"
+            aria-describedby="demo-popup-desc"
+        >
+            <!-- Close button -->
+            <button
+                type="button"
+                onclick={closeDemoPopup}
+                class="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600
+                       rounded-lg hover:bg-gray-100 transition-colors
+                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-medical-500"
+                aria-label="Zamknij"
+            >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <!-- Icon -->
+            <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+
+            <!-- Content -->
+            <h2 id="demo-popup-title" class="text-xl sm:text-2xl font-bold text-gray-900 text-center mb-3">
+                Strona prezentacyjna
+            </h2>
+            <p id="demo-popup-desc" class="text-gray-600 text-center mb-6 leading-relaxed">
+                To jest <strong>strona demonstracyjna</strong> przedstawiajaca mozliwosci nowoczesnej witryny dla kliniki medycznej.
+                Wszystkie dane sa fikcyjne i sluza wylacznie celom prezentacyjnym.
+            </p>
+
+            <!-- CTA -->
+            <div class="bg-gradient-to-r from-medical-50 to-blue-50 rounded-xl p-4 mb-6">
+                <p class="text-sm text-gray-700 text-center mb-3">
+                    Chcesz miec taka strone dla swojej firmy?
+                </p>
+                <a
+                    href="https://becht.pl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex items-center justify-center gap-2 w-full px-6 py-3 bg-medical-600 text-white
+                           font-semibold rounded-lg hover:bg-medical-700 transition-colors
+                           focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-medical-500/50"
+                >
+                    Zamow strone w becht.pl
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Dismiss button -->
+            <button
+                type="button"
+                onclick={closeDemoPopup}
+                class="w-full px-4 py-2 text-gray-500 hover:text-gray-700 text-sm
+                       focus-visible:outline-none focus-visible:underline transition-colors"
+            >
+                Rozumiem, kontynuuj przegladanie
+            </button>
+        </div>
+    </div>
+{/if}
+
 <style>
+    @keyframes popup-appear {
+        from {
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    .animate-popup {
+        animation: popup-appear 0.3s ease-out;
+    }
     .line-clamp-2 {
         display: -webkit-box;
         -webkit-line-clamp: 2;
