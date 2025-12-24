@@ -14,44 +14,44 @@
     let showBanner = $state(false);
     let showDetails = $state(false);
     let isLoading = $state(true);
-
-    // Nasluchuj eventu otwierania ustawien
-    $effect(() => {
-        if (typeof window !== 'undefined') {
-            const handler = () => {
-                showBanner = true;
-                showDetails = true;
-            };
-            window.addEventListener('openCookieSettings', handler);
-            return () => window.removeEventListener('openCookieSettings', handler);
-        }
-    });
+    let initialized = $state(false);
 
     // Kategorie ciasteczek
     let consent = $state({
-        essential: true,      // Zawsze wymagane - nie można wyłączyć
-        analytics: false,     // Statystyki i analityka
-        marketing: false,     // Reklamy i marketing
+        essential: true,
+        analytics: false,
+        marketing: false,
     });
 
-    // Sprawdź zapisaną zgodę przy starcie
+    // Inicjalizacja - tylko raz przy montowaniu
     $effect(() => {
-        if (typeof window !== 'undefined') {
-            const savedConsent = localStorage.getItem('cookieConsent');
-            if (savedConsent) {
-                try {
-                    const parsed = JSON.parse(savedConsent);
-                    consent = { ...consent, ...parsed };
-                    onConsentChange(consent);
-                    showBanner = false;
-                } catch {
-                    showBanner = true;
-                }
-            } else {
+        if (typeof window === 'undefined' || initialized) return;
+        initialized = true;
+
+        // Sprawdź zapisaną zgodę
+        const savedConsent = localStorage.getItem('cookieConsent');
+        if (savedConsent) {
+            try {
+                const parsed = JSON.parse(savedConsent);
+                consent.analytics = parsed.analytics ?? false;
+                consent.marketing = parsed.marketing ?? false;
+                onConsentChange(consent);
+                showBanner = false;
+            } catch {
                 showBanner = true;
             }
-            isLoading = false;
+        } else {
+            showBanner = true;
         }
+        isLoading = false;
+
+        // Nasluchuj eventu otwierania ustawien
+        const handler = () => {
+            showBanner = true;
+            showDetails = true;
+        };
+        window.addEventListener('openCookieSettings', handler);
+        return () => window.removeEventListener('openCookieSettings', handler);
     });
 
     // Zapisz zgodę
