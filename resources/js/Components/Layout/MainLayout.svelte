@@ -618,7 +618,7 @@
 
             <!-- Content -->
             <h2 id="demo-popup-title" class="text-xl sm:text-2xl font-bold text-gray-900 text-center mb-3">
-                Strona prezentacyjna
+                STRONA DEMONSTRACYJNA
             </h2>
             <p id="demo-popup-desc" class="text-gray-600 text-center mb-6 leading-relaxed">
                 To jest <strong>strona demonstracyjna</strong> przedstawiajaca mozliwosci nowoczesnej witryny dla kliniki medycznej.
