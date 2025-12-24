@@ -30,7 +30,7 @@ class ListMedia extends ListRecords
                         ->label('Pliki')
                         ->multiple()
                         ->maxFiles(10)
-                        ->maxSize(204800) // 200MB
+                        ->maxSize(1048576) // 1GB
                         ->acceptedFileTypes([
                             'image/jpeg',
                             'image/png',
@@ -38,11 +38,14 @@ class ListMedia extends ListRecords
                             'image/webp',
                             'video/mp4',
                             'video/webm',
+                            'video/quicktime',
+                            'video/x-msvideo',
+                            'video/x-matroska',
                             'application/pdf',
                             'text/plain',
                             'text/markdown',
                         ])
-                        ->helperText('Obrazy, video, PDF, TXT, MD. Max 200MB na plik.')
+                        ->helperText('Obrazy, video, PDF, TXT, MD. Max 1GB na plik.')
                         ->preserveFilenames()
                         ->directory('temp-uploads'),
 
