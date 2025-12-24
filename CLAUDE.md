@@ -7,7 +7,7 @@ Lista wszystkich instrukcji i dokumentow w projekcie:
 | Plik | Opis |
 |------|------|
 | [CLAUDE.md](CLAUDE.md) | Glowne instrukcje dla AI - architektura, standardy, wytyczne |
-| [TASK_PLAN.md](TASK_PLAN.md) | Plan zadan i postep prac (~70% ukonczony) |
+| [TASK_PLAN.md](TASK_PLAN.md) | Plan zadan i postep prac (~75% ukonczony) |
 | [PLAN_PROJEKTU.md](PLAN_PROJEKTU.md) | Ogolny plan projektu |
 | [DEPLOY_DHOSTING.md](DEPLOY_DHOSTING.md) | Instrukcja deploymentu na dhosting.pl |
 | [BRANDING.md](BRANDING.md) | Wytyczne brandingowe (kolory, logo, styl) |
@@ -19,6 +19,7 @@ Lista wszystkich instrukcji i dokumentow w projekcie:
 
 ## 1. Project Overview
 - **Type:** Medical Clinic Management System & SEO-Optimized Marketing Site.
+- **Status:** Strona prezentacyjna/demo (fikcyjne dane, popup informacyjny, robots.txt blokuje indeksowanie)
 - **Stack:**
   - **Backend:** Laravel 11.x (PHP 8.2+)
   - **Frontend:** Svelte 5 (via Inertia.js)
@@ -28,6 +29,7 @@ Lista wszystkich instrukcji i dokumentow w projekcie:
   - **Infrastructure:** dhosting.pl (produkcja)
   - **Production URL:** https://medvita.becht.pl/laravel
   - **Image Processing:** Intervention/Image (WebP, responsive sizes)
+  - **Global Search:** SearchController + modal w MainLayout (artykuly + strony statyczne)
 
 ## 2. Architecture & Patterns
 

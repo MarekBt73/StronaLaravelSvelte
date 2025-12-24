@@ -1,12 +1,13 @@
 # Plan zadań - MedVita
 
 ## Status projektu
-**Data aktualizacji:** 23.12.2024
-**Postęp ogólny:** ~70% ukończone
+**Data aktualizacji:** 24.12.2024
+**Postęp ogólny:** ~75% ukończone
 **Produkcja:** https://medvita.becht.pl/laravel
+**Uwaga:** Strona prezentacyjna z fikcyjnymi danymi (popup informacyjny + blokada robotów)
 
 ```
-████████████████░░░░░░░░ 70%
+██████████████████░░░░░░ 75%
 ```
 
 ---
@@ -121,6 +122,20 @@
 ### 4.5 Integracja z homepage ✅
 - [x] Dynamiczne pobieranie ostatnich 3 artykułów
 - [x] Przekazywanie przez Inertia props
+
+### 4.6 Usprawnienia UX (24.12.2024) ✅
+- [x] Hero bloga z tłem graficznym (jak na stronie głównej)
+- [x] Rozwijana wyszukiwarka w hero bloga (ikona lupy)
+- [x] Globalna wyszukiwarka w menu (lupa → modal)
+- [x] SearchController - wyszukiwanie artykułów + stron statycznych
+- [x] Weryfikacja email w panelu (przyciski: wyślij/zweryfikuj ręcznie)
+- [x] Status weryfikacji email w tabeli użytkowników
+
+### 4.7 Strona prezentacyjna (24.12.2024) ✅
+- [x] Popup informacyjny po 10 sekundach
+- [x] Link do becht.pl (zamów stronę)
+- [x] Zapamiętywanie zamknięcia w localStorage
+- [x] robots.txt blokujący wszystkie roboty
 
 ---
 
