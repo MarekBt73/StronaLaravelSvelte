@@ -17,14 +17,14 @@
                 <x-heroicon-o-arrow-top-right-on-square class="w-4 h-4 ml-auto text-gray-400" />
             </a>
 
-            <a href="https://poczta.dhosting.pl" target="_blank"
+            <a href="https://dpoczta.pl/" target="_blank"
                class="flex items-center gap-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-success-100 dark:bg-success-900 flex items-center justify-center">
                     <x-heroicon-o-envelope class="w-5 h-5 text-success-600 dark:text-success-400" />
                 </div>
                 <div>
                     <p class="font-medium text-gray-900 dark:text-white">Poczta e-mail</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Webmail dhosting.pl</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">dpoczta.pl</p>
                 </div>
                 <x-heroicon-o-arrow-top-right-on-square class="w-4 h-4 ml-auto text-gray-400" />
             </a>
