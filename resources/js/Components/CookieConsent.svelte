@@ -8,13 +8,14 @@
      * - Wytyczne EROD (European Data Protection Board)
      */
 
+    import { onMount } from 'svelte';
+
     let { onConsentChange = () => {} } = $props();
 
     // Stan komponentu
     let showBanner = $state(false);
     let showDetails = $state(false);
     let isLoading = $state(true);
-    let initialized = $state(false);
 
     // Kategorie ciasteczek
     let consent = $state({
@@ -23,11 +24,8 @@
         marketing: false,
     });
 
-    // Inicjalizacja - tylko raz przy montowaniu
-    $effect(() => {
-        if (typeof window === 'undefined' || initialized) return;
-        initialized = true;
-
+    // Inicjalizacja - tylko raz przy montowaniu (onMount nie powoduje infinite loop)
+    onMount(() => {
         // Sprawdź zapisaną zgodę
         const savedConsent = localStorage.getItem('cookieConsent');
         if (savedConsent) {
