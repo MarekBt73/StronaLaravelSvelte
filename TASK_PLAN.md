@@ -1,7 +1,7 @@
 # Plan zadań - MedVita
 
 ## Status projektu
-**Data aktualizacji:** 24.12.2024
+**Data aktualizacji:** 24.12.2024 (wieczór)
 **Postęp ogólny:** ~85% ukończone
 **Produkcja:** https://medvita.becht.pl/laravel
 **Uwaga:** Strona prezentacyjna z fikcyjnymi danymi (popup informacyjny + blokada robotów)
@@ -9,6 +9,10 @@
 ```
 █████████████████████░░░ 85%
 ```
+
+### Priorytety na 25.12.2024:
+1. **FAZA 5** - Formularz kontaktowy z Filament
+2. **FAZA 6** - Edycja stron statycznych (jeśli czas pozwoli)
 
 ---
 
@@ -93,7 +97,6 @@
 ### 3.5 Nawigacja Filament wg ról ✅
 - [x] Ukryć "Użytkownicy" dla nie-adminów
 - [x] Ukryć "Blog" dla lekarzy/asystentów
-- [ ] Dodać grupę "Wizyty" (widoczna dla lekarzy/asystentów) → przeniesione do FAZA 5
 
 ---
 
@@ -176,19 +179,55 @@
 - [x] Link "Ustawienia cookies" w stopce
 - [x] Event `cookieConsentChanged` dla skryptów zewnętrznych
 
+### 4.12 Optymalizacja wydajności (24.12.2024) ✅
+- [x] Zmiana koloru medical-600 na #0369a1 (WCAG AA contrast)
+- [x] Komenda `php artisan images:optimize` (WebP + responsive)
+- [x] Fix infinite loop w Svelte ($effect → onMount)
+- [x] HTTPS force scheme dla produkcji
+
 ---
 
-## FAZA 5: Edycja stron statycznych 📋 ZAPLANOWANA
+## FAZA 5: Formularz kontaktowy ⏳ NASTĘPNY ETAP (25.12.2024)
 
-### 5.1 Model i migracje
+### 5.1 Model i migracja
+- [ ] Model `Contact` (name, email, phone, subject, message, is_read, read_at)
+- [ ] Migracja `contacts`
+- [ ] Walidacja danych (FormRequest)
+
+### 5.2 Frontend Svelte
+- [ ] Rozbudowa Contact.svelte o działający formularz
+- [ ] Walidacja po stronie klienta
+- [ ] Stan wysyłania (loading, success, error)
+- [ ] Honeypot antyspamowy
+- [ ] Rate limiting (max 3 wiadomości / godzinę)
+
+### 5.3 Panel Filament
+- [ ] ContactResource (lista wiadomości)
+- [ ] Filtrowanie: przeczytane/nieprzeczytane
+- [ ] Oznaczanie jako przeczytane
+- [ ] Bulk actions: oznacz przeczytane, usuń
+- [ ] Badge w nawigacji (liczba nieprzeczytanych)
+
+### 5.4 Powiadomienia email
+- [ ] ContactNotification (Mailable)
+- [ ] Wysyłka do administratora przy nowej wiadomości
+- [ ] Konfiguracja odbiorcy w .env (CONTACT_EMAIL)
+- [ ] Szablon email z danymi kontaktowymi
+
+---
+
+## FAZA 6: Edycja stron statycznych 📋 ZAPLANOWANA
+
+### 6.1 Model i migracje
 - [ ] `static_pages` - treści edytowalne (klucz, wartość JSON)
 - [ ] `settings` - ustawienia globalne strony
+- [ ] Seeder z domyślnymi wartościami
 
-### 5.2 Filament Resources
+### 6.2 Filament Resources
 - [ ] StaticPageResource - edycja treści stron
-- [ ] SettingsResource - ustawienia globalne
+- [ ] SettingsResource - ustawienia globalne (logo, dane kontaktowe, social media)
 
-### 5.3 Strony do edycji
+### 6.3 Strony do edycji
 - [ ] Strona główna (hero, sekcje, CTA)
 - [ ] O nas (treść, zespół)
 - [ ] Kontakt (adres, telefon, email, godziny)
@@ -196,49 +235,11 @@
 - [ ] Regulamin, Polityka prywatności
 - [ ] Stopka (linki, dane kontaktowe)
 
-### 5.4 Funkcjonalności
-- [ ] Edytor WYSIWYG dla treści
-- [ ] Upload grafik do sekcji
-- [ ] Podgląd zmian przed zapisem
-- [ ] Historia wersji (opcjonalnie)
-
----
-
-## FAZA 6: System wizyt ⏳ NASTĘPNY ETAP
-
-### 6.1 Migracje
-- [ ] `doctors` - profil lekarza (specjalizacja, bio, godziny)
-- [ ] `schedules` - grafik dostępności
-- [ ] `appointments` - rezerwacje wizyt
-- [ ] `patients` - dane pacjentów (opcjonalnie)
-
-### 6.2 Modele
-- [ ] Doctor (rozszerzenie User lub relacja)
-- [ ] Schedule (sloty czasowe)
-- [ ] Appointment (rezerwacja)
-
-### 6.3 Filament Resources
-- [ ] DoctorResource
-- [ ] ScheduleResource
-- [ ] AppointmentResource
-- [ ] Grupa nawigacji "Wizyty" (widoczna dla lekarzy/asystentów)
-
----
-
-## FAZA 7: Booking Flow 📋 ZAPLANOWANA
-
-### 7.1 Krok 1: Wybór specjalisty
-- [ ] Lista lekarzy z filtrami
-- [ ] Karty lekarzy ze specjalizacjami
-
-### 7.2 Krok 2: Wybór terminu
-- [ ] Kalendarz dostępności
-- [ ] Wyświetlanie wolnych slotów
-
-### 7.3 Krok 3: Potwierdzenie
-- [ ] Logowanie/rejestracja pacjenta
-- [ ] Formularz danych
-- [ ] Email z potwierdzeniem
+### 6.4 Funkcjonalności
+- [ ] Edytor WYSIWYG (TinyMCE) dla treści
+- [ ] Upload grafik do sekcji (integracja z MediaResource)
+- [ ] Podgląd zmian przed zapisem (opcjonalnie)
+- [ ] Cache treści statycznych
 
 ---
 
@@ -259,13 +260,11 @@
 
 ## Tabela ról
 
-| Rola | Użytkownicy | Artykuły | Kategorie | Wizyty | Grafik |
-|------|:-----------:|:--------:|:---------:|:------:|:------:|
+| Rola | Użytkownicy | Artykuły | Kategorie | Kontakt | Media |
+|------|:-----------:|:--------:|:---------:|:-------:|:-----:|
 | admin | ✅ | ✅ | ✅ | ✅ | ✅ |
 | technik | ❌ | ✅ | ✅ | ✅ | ✅ |
-| redaktor | ❌ | ✅ | ✅ | ❌ | ❌ |
-| lekarz | ❌ | ❌ | ❌ | ✅ | ✅ |
-| asystent | ❌ | ❌ | ❌ | ✅ | ✅ |
+| redaktor | ❌ | ✅ | ✅ | ❌ | ✅ |
 
 ---
 
