@@ -69,7 +69,7 @@
     <!-- Article Header -->
     <article>
         <header class="bg-gradient-to-br from-medical-600 to-medical-800 text-white py-12 lg:py-16">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <!-- Breadcrumb -->
                 <nav class="mb-6" aria-label="Breadcrumb">
                     <ol class="flex items-center gap-2 text-sm text-medical-200">
@@ -141,7 +141,7 @@
         <!-- Featured Image -->
         {#if article.featured_image}
             <div class="relative -mt-8 mb-8">
-                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <img
                         src="/storage/{article.featured_image}"
                         alt={article.featured_image_alt || article.title}
@@ -152,7 +152,7 @@
         {/if}
 
         <!-- Article Content -->
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="lg:flex lg:gap-12">
                 <!-- Share Sidebar (Desktop) -->
                 <aside class="hidden lg:block lg:w-16 flex-shrink-0">
