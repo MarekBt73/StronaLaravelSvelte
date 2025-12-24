@@ -30,7 +30,7 @@ class ListMedia extends ListRecords
                         ->label('Pliki')
                         ->multiple()
                         ->maxFiles(10)
-                        ->maxSize(10240) // 10MB
+                        ->maxSize(204800) // 200MB
                         ->acceptedFileTypes([
                             'image/jpeg',
                             'image/png',
@@ -42,7 +42,7 @@ class ListMedia extends ListRecords
                             'text/plain',
                             'text/markdown',
                         ])
-                        ->helperText('Obrazy, video, PDF, TXT, MD. Max 10MB na plik.')
+                        ->helperText('Obrazy, video, PDF, TXT, MD. Max 200MB na plik.')
                         ->preserveFilenames()
                         ->directory('temp-uploads'),
 

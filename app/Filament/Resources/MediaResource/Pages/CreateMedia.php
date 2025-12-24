@@ -23,7 +23,7 @@ class CreateMedia extends CreateRecord
                     Forms\Components\FileUpload::make('file')
                         ->label('Plik')
                         ->required()
-                        ->maxSize(10240) // 10MB
+                        ->maxSize(204800) // 200MB
                         ->acceptedFileTypes([
                             'image/jpeg',
                             'image/png',
@@ -35,7 +35,7 @@ class CreateMedia extends CreateRecord
                             'text/plain',
                             'text/markdown',
                         ])
-                        ->helperText('Obrazy, video, PDF, TXT, MD. Max 10MB.')
+                        ->helperText('Obrazy, video, PDF, TXT, MD. Max 200MB.')
                         ->preserveFilenames()
                         ->directory('temp-uploads')
                         ->columnSpanFull(),
