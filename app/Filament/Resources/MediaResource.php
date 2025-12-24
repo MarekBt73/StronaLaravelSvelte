@@ -41,12 +41,14 @@ class MediaResource extends Resource
                             ->schema([
                                 Forms\Components\Placeholder::make('preview')
                                     ->label('')
-                                    ->content(function (?Media $record): string {
+                                    ->content(function (?Media $record): \Illuminate\Support\HtmlString|string {
                                         if (! $record || ! $record->isImage()) {
                                             return 'Brak podgladu';
                                         }
 
-                                        return '<img src="' . $record->url . '" class="max-w-full max-h-96 rounded-lg shadow" alt="' . e($record->alt_text ?? $record->name) . '">';
+                                        return new \Illuminate\Support\HtmlString(
+                                            '<img src="' . e($record->url) . '" class="max-w-full max-h-96 rounded-lg shadow" alt="' . e($record->alt_text ?? $record->name) . '">'
+                                        );
                                     })
                                     ->extraAttributes(['class' => 'flex justify-center'])
                                     ->dehydrated(false),
