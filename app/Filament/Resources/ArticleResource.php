@@ -123,7 +123,7 @@ class ArticleResource extends Resource
 
                                 Forms\Components\Placeholder::make('media_preview')
                                     ->label('Podglad')
-                                    ->content(function (Forms\Get $get): string {
+                                    ->content(function (Forms\Get $get): \Illuminate\Support\HtmlString|string {
                                         $mediaId = $get('featured_image_id');
                                         if (! $mediaId) {
                                             return '';
@@ -133,7 +133,9 @@ class ArticleResource extends Resource
                                             return '';
                                         }
 
-                                        return '<img src="' . $media->url . '" class="max-h-48 rounded-lg shadow" alt="' . e($media->alt_text ?? $media->name) . '">';
+                                        return new \Illuminate\Support\HtmlString(
+                                            '<img src="' . e($media->url) . '" class="max-h-48 rounded-lg shadow" alt="' . e($media->alt_text ?? $media->name) . '">'
+                                        );
                                     })
                                     ->visible(fn (Forms\Get $get): bool => $get('use_media_library') && $get('featured_image_id') !== null)
                                     ->dehydrated(false),
