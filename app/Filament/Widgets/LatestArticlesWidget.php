@@ -6,6 +6,7 @@ namespace App\Filament\Widgets;
 
 use App\Filament\Resources\ArticleResource;
 use App\Models\Article;
+use App\Models\ArticleView;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -86,23 +87,33 @@ class LatestArticlesWidget extends BaseWidget
     {
         $chartId = 'views-chart-' . $record->id;
 
-        // Generate sample data for last 30 days (in real app, you'd query actual daily views)
-        $labels = [];
-        $data = [];
-        $totalViews = $record->views;
-
-        for ($i = 29; $i >= 0; $i--) {
-            $date = now()->subDays($i);
-            $labels[] = $date->format('d.m');
-            // Simulate daily distribution (in production, use actual daily stats table)
-            $data[] = $i < 7 ? rand(0, max(1, intval($totalViews / 10))) : rand(0, max(1, intval($totalViews / 20)));
+        // Pobierz rzeczywiste dane z ostatnich 30 dni
+        try {
+            $chartData = ArticleView::getChartData($record->id, 30);
+        } catch (\Throwable $e) {
+            // Jesli tabela nie istnieje, zwroc puste dane
+            $chartData = ['labels' => [], 'views' => [], 'unique' => []];
         }
 
-        $labelsJson = json_encode($labels);
-        $dataJson = json_encode($data);
+        $labelsJson = json_encode($chartData['labels']);
+        $viewsJson = json_encode($chartData['views']);
+        $uniqueJson = json_encode($chartData['unique']);
+
+        $totalViews = array_sum($chartData['views']);
+        $totalUnique = array_sum($chartData['unique']);
 
         return <<<HTML
         <div class="p-4">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-3 text-center">
+                    <p class="text-2xl font-bold text-primary-600">{$totalViews}</p>
+                    <p class="text-sm text-gray-500">Wyswietlenia (30 dni)</p>
+                </div>
+                <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-3 text-center">
+                    <p class="text-2xl font-bold text-success-600">{$totalUnique}</p>
+                    <p class="text-sm text-gray-500">Unikalnych (30 dni)</p>
+                </div>
+            </div>
             <canvas id="{$chartId}" height="200"></canvas>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -114,21 +125,33 @@ class LatestArticlesWidget extends BaseWidget
                         type: 'line',
                         data: {
                             labels: {$labelsJson},
-                            datasets: [{
-                                label: 'Wyswietlenia',
-                                data: {$dataJson},
-                                backgroundColor: 'rgba(14, 165, 142, 0.2)',
-                                borderColor: 'rgb(14, 165, 142)',
-                                borderWidth: 2,
-                                fill: true,
-                                tension: 0.3
-                            }]
+                            datasets: [
+                                {
+                                    label: 'Wyswietlenia',
+                                    data: {$viewsJson},
+                                    backgroundColor: 'rgba(14, 165, 142, 0.2)',
+                                    borderColor: 'rgb(14, 165, 142)',
+                                    borderWidth: 2,
+                                    fill: true,
+                                    tension: 0.3
+                                },
+                                {
+                                    label: 'Unikalni',
+                                    data: {$uniqueJson},
+                                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                                    borderColor: 'rgb(59, 130, 246)',
+                                    borderWidth: 2,
+                                    fill: false,
+                                    tension: 0.3
+                                }
+                            ]
                         },
                         options: {
                             responsive: true,
                             plugins: {
                                 legend: {
-                                    display: false
+                                    display: true,
+                                    position: 'bottom'
                                 }
                             },
                             scales: {

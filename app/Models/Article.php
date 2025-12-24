@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Article extends Model
@@ -42,6 +43,16 @@ class Article extends Model
     public function featuredMedia(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'featured_image_id');
+    }
+
+    public function dailyViews(): HasMany
+    {
+        return $this->hasMany(ArticleView::class);
+    }
+
+    public function visitorSessions(): HasMany
+    {
+        return $this->hasMany(ArticleVisitorSession::class);
     }
 
     /**

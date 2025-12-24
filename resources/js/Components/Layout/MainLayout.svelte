@@ -2,8 +2,16 @@
     import { inertia } from '@inertiajs/svelte';
     import { router } from '@inertiajs/svelte';
     import AccessibilityPanel from '../AccessibilityPanel.svelte';
+    import CookieConsent from '../CookieConsent.svelte';
 
     let { children } = $props();
+
+    // Cookie consent reference
+    let cookieConsentRef = $state(null);
+
+    function openCookieSettings() {
+        cookieConsentRef?.openSettings();
+    }
 
     // Accessibility panel state
     let a11yPanelOpen = $state(false);
@@ -545,6 +553,15 @@
                     <li><a href="/polityka-prywatnosci" use:inertia class="hover:text-white transition-colors focus-visible:outline-none focus-visible:underline">Polityka prywatności</a></li>
                     <li><a href="/rodo" use:inertia class="hover:text-white transition-colors focus-visible:outline-none focus-visible:underline">RODO</a></li>
                     <li><a href="/dostepnosc" use:inertia class="hover:text-white transition-colors focus-visible:outline-none focus-visible:underline">Deklaracja dostępności</a></li>
+                    <li>
+                        <button
+                            type="button"
+                            onclick={openCookieSettings}
+                            class="hover:text-white transition-colors focus-visible:outline-none focus-visible:underline text-left"
+                        >
+                            Ustawienia cookies
+                        </button>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -557,6 +574,9 @@
 
 <!-- Accessibility Panel -->
 <AccessibilityPanel bind:isOpen={a11yPanelOpen} />
+
+<!-- Cookie Consent -->
+<CookieConsent bind:this={cookieConsentRef} />
 
 <!-- Demo Site Popup -->
 {#if showDemoPopup}

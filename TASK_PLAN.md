@@ -2,12 +2,12 @@
 
 ## Status projektu
 **Data aktualizacji:** 24.12.2024
-**Postęp ogólny:** ~80% ukończone
+**Postęp ogólny:** ~85% ukończone
 **Produkcja:** https://medvita.becht.pl/laravel
 **Uwaga:** Strona prezentacyjna z fikcyjnymi danymi (popup informacyjny + blokada robotów)
 
 ```
-████████████████████░░░░ 80%
+█████████████████████░░░ 85%
 ```
 
 ---
@@ -157,6 +157,24 @@
 - [x] Style CSS dla trybów dostępności
 - [x] Zapis ustawień w localStorage
 - [x] Przycisk dostępności w rogu strony
+
+### 4.10 Statystyki wyświetleń (24.12.2024) ✅
+- [x] Migracja: `article_views` (dzienne statystyki)
+- [x] Migracja: `article_visitor_sessions` (unikalni użytkownicy - hash sesji)
+- [x] Model ArticleView z metodą `recordView()` i `getChartData()`
+- [x] Model ArticleVisitorSession (RODO - bez IP)
+- [x] BlogController zapisuje dzienne wyświetlenia
+- [x] LatestArticlesWidget - wykres z prawdziwymi danymi
+- [x] Popup statystyk z wykresem (wyświetlenia + unikalni)
+
+### 4.11 Cookie Consent (24.12.2024) ✅
+- [x] CookieConsent.svelte - popup zgodny z RODO/GDPR
+- [x] Kategorie: niezbędne, analityczne, marketingowe
+- [x] Przyciski: Akceptuj wszystkie / Tylko niezbędne / Dostosuj
+- [x] Szczegółowy widok z przełącznikami
+- [x] Zapis preferencji w localStorage
+- [x] Link "Ustawienia cookies" w stopce
+- [x] Event `cookieConsentChanged` dla skryptów zewnętrznych
 
 ---
 

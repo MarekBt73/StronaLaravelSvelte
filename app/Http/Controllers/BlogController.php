@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\ArticleView;
+use App\Models\ArticleVisitorSession;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -61,8 +63,18 @@ class BlogController extends Controller
             ->with(['category', 'author'])
             ->firstOrFail();
 
-        // Increment views
+        // Increment views (ogolny licznik + dzienne statystyki)
         $article->increment('views');
+
+        // Zapisz dzienne statystyki z unikalnym uzytkownikiem
+        // Try-catch aby strona dzialala nawet jesli tabele nie istnieja
+        try {
+            $sessionHash = ArticleVisitorSession::generateSessionHash();
+            ArticleView::recordView($article->id, $sessionHash);
+        } catch (\Throwable $e) {
+            // Ignoruj bledy - statystyki sa opcjonalne
+            report($e);
+        }
 
         // Related articles
         $related = Article::published()
