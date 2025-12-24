@@ -19,6 +19,7 @@ class StatsOverviewWidget extends BaseWidget
         $totalArticles = Article::count();
         $publishedArticles = Article::where('is_published', true)->count();
         $draftArticles = $totalArticles - $publishedArticles;
+        $totalViews = Article::sum('views');
         $mediaCount = Media::count();
         $categoriesCount = Category::count();
 
@@ -28,6 +29,11 @@ class StatsOverviewWidget extends BaseWidget
                 ->descriptionIcon('heroicon-m-document-text')
                 ->color('primary')
                 ->chart($this->getArticlesChartData()),
+
+            Stat::make('Wyswietlenia', number_format($totalViews))
+                ->description('Lacznie wszystkich artykulow')
+                ->descriptionIcon('heroicon-m-eye')
+                ->color('info'),
 
             Stat::make('Pliki mediow', $mediaCount)
                 ->description('W bibliotece mediow')
