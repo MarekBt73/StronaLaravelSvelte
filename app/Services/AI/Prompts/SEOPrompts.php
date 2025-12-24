@@ -127,17 +127,37 @@ Tresc artykulu:
 
 Wygeneruj w formacie JSON (bez dodatkowego tekstu, tylko JSON):
 {
-  "meta_title": "tytul max 60 znakow",
-  "meta_description": "opis 150-160 znakow",
+  "meta_title": "tytul max 55 znakow",
+  "meta_description": "opis DOKLADNIE 140-155 znakow - NIE WIECEJ",
   "keywords": "slowo1, slowo2, slowo3, slowo4, slowo5"
 }
 
-Wymagania:
-- meta_title: max 60 znakow, slowo kluczowe na poczatku, bez nazwy firmy
-- meta_description: dokladnie 150-160 znakow, zachecajacy
+KRYTYCZNE WYMAGANIA (MUSISZ ICH PRZESTRZEGAC):
+- meta_title: MAKSYMALNIE 55 znakow (licz dokladnie!), slowo kluczowe na poczatku
+- meta_description: MAKSYMALNIE 155 znakow (licz dokladnie!), NIE PRZEKRACZAJ tego limitu!
 - keywords: 5-8 slow kluczowych po polsku, oddzielonych przecinkami
 
 Odpowiedz TYLKO poprawnym JSON, bez komentarzy czy dodatkowego tekstu.
 PROMPT;
+    }
+
+    /**
+     * Obcina tekst do maksymalnej dlugosci.
+     */
+    public static function truncate(string $text, int $maxLength): string
+    {
+        if (mb_strlen($text) <= $maxLength) {
+            return $text;
+        }
+
+        // Obetnij do ostatniej spacji przed limitem
+        $truncated = mb_substr($text, 0, $maxLength);
+        $lastSpace = mb_strrpos($truncated, ' ');
+
+        if ($lastSpace !== false && $lastSpace > $maxLength - 20) {
+            return mb_substr($truncated, 0, $lastSpace);
+        }
+
+        return $truncated;
     }
 }

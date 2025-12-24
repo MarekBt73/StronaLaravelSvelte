@@ -106,10 +106,12 @@ class ArticleResource extends Resource
                                                 if ($response->success) {
                                                     $data = json_decode(preg_replace('/```json\s*|```\s*/', '', $response->content), true);
                                                     if (isset($data['meta_title'])) {
-                                                        $set('meta_title', $data['meta_title']);
+                                                        // Obetnij do 60 znaków
+                                                        $set('meta_title', \App\Services\AI\Prompts\SEOPrompts::truncate($data['meta_title'], 60));
                                                     }
                                                     if (isset($data['meta_description'])) {
-                                                        $set('meta_description', $data['meta_description']);
+                                                        // Obetnij do 160 znaków
+                                                        $set('meta_description', \App\Services\AI\Prompts\SEOPrompts::truncate($data['meta_description'], 160));
                                                     }
                                                     if (isset($data['keywords'])) {
                                                         $set('meta_keywords', $data['keywords']);
