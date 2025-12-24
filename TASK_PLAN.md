@@ -2,12 +2,12 @@
 
 ## Status projektu
 **Data aktualizacji:** 24.12.2024
-**Postęp ogólny:** ~75% ukończone
+**Postęp ogólny:** ~80% ukończone
 **Produkcja:** https://medvita.becht.pl/laravel
 **Uwaga:** Strona prezentacyjna z fikcyjnymi danymi (popup informacyjny + blokada robotów)
 
 ```
-██████████████████░░░░░░ 75%
+████████████████████░░░░ 80%
 ```
 
 ---
@@ -42,7 +42,14 @@
 - [x] AdminPanelProvider
 - [x] Superuser: admin@medvita.pl / admin123
 
-### 2.2 System blogowy ✅
+### 2.2 Dashboard widgety ✅ (24.12.2024)
+- [x] StatsOverviewWidget (artykuły, media, kategorie)
+- [x] LatestArticlesWidget (tabela 5 ostatnich artykułów)
+- [x] QuickLinksWidget (linki: strona, poczta, dokumentacja, media)
+- [x] ArticlesChartWidget (wykres artykułów 30 dni)
+- [x] SystemInfoWidget (PHP, Laravel, Filament, storage, debug)
+
+### 2.3 System blogowy ✅
 - [x] Migracja: categories (typ: news/medical)
 - [x] Migracja: articles (SEO, featured image)
 - [x] Model Category + scopes
@@ -137,22 +144,62 @@
 - [x] Zapamiętywanie zamknięcia w localStorage
 - [x] robots.txt blokujący wszystkie roboty
 
+### 4.8 Biblioteka mediów (24.12.2024) ✅
+- [x] Model Media z wariantami responsive (thumbnail, mobile, tablet, desktop)
+- [x] MediaService - upload z kompresją WebP
+- [x] MediaResource w Filament (CRUD, podgląd, bulk upload)
+- [x] AI generowanie ALT i tagów (Gemini Vision API)
+- [x] Integracja z ArticleResource (wybór z galerii lub upload)
+- [x] Limity upload: 1GB, video MP4/WebM/MOV/AVI/MKV
+
+### 4.9 Dostępność (24.12.2024) ✅
+- [x] AccessibilityPanel.svelte (rozmiar czcionki, kontrast, wielkie litery, motyw)
+- [x] Style CSS dla trybów dostępności
+- [x] Zapis ustawień w localStorage
+- [x] Przycisk dostępności w rogu strony
+
 ---
 
-## FAZA 5: System wizyt ⏳ NASTĘPNY ETAP
+## FAZA 5: Edycja stron statycznych 📋 ZAPLANOWANA
 
-### 5.1 Migracje
+### 5.1 Model i migracje
+- [ ] `static_pages` - treści edytowalne (klucz, wartość JSON)
+- [ ] `settings` - ustawienia globalne strony
+
+### 5.2 Filament Resources
+- [ ] StaticPageResource - edycja treści stron
+- [ ] SettingsResource - ustawienia globalne
+
+### 5.3 Strony do edycji
+- [ ] Strona główna (hero, sekcje, CTA)
+- [ ] O nas (treść, zespół)
+- [ ] Kontakt (adres, telefon, email, godziny)
+- [ ] Usługi (lista usług, opisy)
+- [ ] Regulamin, Polityka prywatności
+- [ ] Stopka (linki, dane kontaktowe)
+
+### 5.4 Funkcjonalności
+- [ ] Edytor WYSIWYG dla treści
+- [ ] Upload grafik do sekcji
+- [ ] Podgląd zmian przed zapisem
+- [ ] Historia wersji (opcjonalnie)
+
+---
+
+## FAZA 6: System wizyt ⏳ NASTĘPNY ETAP
+
+### 6.1 Migracje
 - [ ] `doctors` - profil lekarza (specjalizacja, bio, godziny)
 - [ ] `schedules` - grafik dostępności
 - [ ] `appointments` - rezerwacje wizyt
 - [ ] `patients` - dane pacjentów (opcjonalnie)
 
-### 5.2 Modele
+### 6.2 Modele
 - [ ] Doctor (rozszerzenie User lub relacja)
 - [ ] Schedule (sloty czasowe)
 - [ ] Appointment (rezerwacja)
 
-### 5.3 Filament Resources
+### 6.3 Filament Resources
 - [ ] DoctorResource
 - [ ] ScheduleResource
 - [ ] AppointmentResource
@@ -160,17 +207,17 @@
 
 ---
 
-## FAZA 6: Booking Flow 📋 ZAPLANOWANA
+## FAZA 7: Booking Flow 📋 ZAPLANOWANA
 
-### 6.1 Krok 1: Wybór specjalisty
+### 7.1 Krok 1: Wybór specjalisty
 - [ ] Lista lekarzy z filtrami
 - [ ] Karty lekarzy ze specjalizacjami
 
-### 6.2 Krok 2: Wybór terminu
+### 7.2 Krok 2: Wybór terminu
 - [ ] Kalendarz dostępności
 - [ ] Wyświetlanie wolnych slotów
 
-### 6.3 Krok 3: Potwierdzenie
+### 7.3 Krok 3: Potwierdzenie
 - [ ] Logowanie/rejestracja pacjenta
 - [ ] Formularz danych
 - [ ] Email z potwierdzeniem
