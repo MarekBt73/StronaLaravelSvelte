@@ -1,4 +1,55 @@
-<div class="space-y-4">
+<div
+    class="space-y-4"
+    x-data="{
+        init() {
+            // Listener dla wstawiania treści do TinyMCE
+            Livewire.on('insertContent', (content) => {
+                const contentToInsert = Array.isArray(content) ? content[0] : content;
+
+                // Znajdź edytor TinyMCE na stronie
+                if (typeof tinymce !== 'undefined' && tinymce.activeEditor) {
+                    tinymce.activeEditor.setContent(contentToInsert);
+                    tinymce.activeEditor.fire('change');
+                } else {
+                    // Fallback - znajdź textarea content
+                    const textarea = document.querySelector('textarea[name=\'data.content\']');
+                    if (textarea) {
+                        textarea.value = contentToInsert;
+                        textarea.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                }
+            });
+
+            // Listener dla SEO
+            Livewire.on('seoGenerated', (data) => {
+                const seoData = Array.isArray(data) ? data[0] : data;
+
+                // Wypełnij pola SEO
+                if (seoData.meta_title) {
+                    const titleInput = document.querySelector('input[name=\'data.meta_title\']');
+                    if (titleInput) {
+                        titleInput.value = seoData.meta_title;
+                        titleInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                }
+                if (seoData.meta_description) {
+                    const descTextarea = document.querySelector('textarea[name=\'data.meta_description\']');
+                    if (descTextarea) {
+                        descTextarea.value = seoData.meta_description;
+                        descTextarea.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                }
+                if (seoData.keywords) {
+                    const keywordsInput = document.querySelector('input[name=\'data.meta_keywords\']');
+                    if (keywordsInput) {
+                        keywordsInput.value = seoData.keywords;
+                        keywordsInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    }
+                }
+            });
+        }
+    }"
+>
     {{-- Header --}}
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
