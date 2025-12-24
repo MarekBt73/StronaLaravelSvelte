@@ -14,6 +14,7 @@ Lista wszystkich instrukcji i dokumentow w projekcie:
 | [ASSETS.md](ASSETS.md) | Lista zasobow graficznych |
 | [README.md](README.md) | Opis projektu Laravel |
 | [docs/CONTENT_GEO_GUIDELINES.md](docs/CONTENT_GEO_GUIDELINES.md) | Wytyczne SEO/GEO dla tresci blogowych |
+| [docs/AI_CONTENT_ASSISTANT.md](docs/AI_CONTENT_ASSISTANT.md) | Specyfikacja AI Content Assistant (Gemini/LLM) |
 
 **WAZNE:** Przed rozpoczeciem pracy zapoznaj sie z odpowiednimi dokumentami powyzej.
 

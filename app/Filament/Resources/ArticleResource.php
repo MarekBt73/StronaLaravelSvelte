@@ -85,7 +85,38 @@ class ArticleResource extends Resource
                                 Forms\Components\TextInput::make('meta_title')
                                     ->label('Meta tytuł')
                                     ->maxLength(60)
-                                    ->helperText('Pozostaw puste, aby użyć tytułu artykułu'),
+                                    ->helperText('Pozostaw puste, aby użyć tytułu artykułu')
+                                    ->suffixAction(
+                                        Forms\Components\Actions\Action::make('generateMetaTitle')
+                                            ->icon('heroicon-o-sparkles')
+                                            ->tooltip('Generuj z AI')
+                                            ->action(function (Forms\Get $get, Forms\Set $set) {
+                                                $title = $get('title');
+                                                $content = $get('content');
+                                                if (empty($title) || empty($content)) {
+                                                    return;
+                                                }
+                                                $aiManager = app(\App\Services\AI\AIManager::class);
+                                                $request = new \App\Services\AI\DTOs\AIRequest(
+                                                    action: \App\Services\AI\AIAction::GENERATE_SEO,
+                                                    content: $content,
+                                                    options: ['title' => $title],
+                                                );
+                                                $response = $aiManager->generate($request);
+                                                if ($response->success) {
+                                                    $data = json_decode(preg_replace('/```json\s*|```\s*/', '', $response->content), true);
+                                                    if (isset($data['meta_title'])) {
+                                                        $set('meta_title', $data['meta_title']);
+                                                    }
+                                                    if (isset($data['meta_description'])) {
+                                                        $set('meta_description', $data['meta_description']);
+                                                    }
+                                                    if (isset($data['keywords'])) {
+                                                        $set('meta_keywords', $data['keywords']);
+                                                    }
+                                                }
+                                            })
+                                    ),
 
                                 Forms\Components\Textarea::make('meta_description')
                                     ->label('Meta opis')
@@ -96,6 +127,15 @@ class ArticleResource extends Resource
                                 Forms\Components\TextInput::make('meta_keywords')
                                     ->label('Słowa kluczowe')
                                     ->helperText('Oddzielone przecinkami'),
+                            ])
+                            ->collapsible()
+                            ->collapsed(),
+
+                        Forms\Components\Section::make('AI Content Assistant')
+                            ->icon('heroicon-o-sparkles')
+                            ->description('Generuj i poprawiaj treści przy pomocy sztucznej inteligencji')
+                            ->schema([
+                                Forms\Components\View::make('livewire.ai-content-panel-embed'),
                             ])
                             ->collapsible()
                             ->collapsed(),

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\AIController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
@@ -63,3 +64,22 @@ Route::get('/rezerwacja', function () {
 
 // Global search API
 Route::get('/api/search', [SearchController::class, 'search'])->name('search');
+
+/*
+|--------------------------------------------------------------------------
+| Admin AI API Routes
+|--------------------------------------------------------------------------
+|
+| Endpointy API dla AI Content Assistant w panelu administracyjnym.
+| Wymagaja autoryzacji przez Filament (panel admin).
+|
+*/
+Route::prefix('admin/api/ai')
+    ->middleware(['web', 'auth'])
+    ->name('admin.ai.')
+    ->group(function () {
+        Route::post('/generate', [AIController::class, 'generate'])->name('generate');
+        Route::post('/seo', [AIController::class, 'generateSEO'])->name('seo');
+        Route::post('/suggest-titles', [AIController::class, 'suggestTitles'])->name('suggest-titles');
+        Route::get('/status', [AIController::class, 'status'])->name('status');
+    });
