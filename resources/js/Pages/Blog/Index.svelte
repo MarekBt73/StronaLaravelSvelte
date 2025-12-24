@@ -89,12 +89,23 @@
 
 <MainLayout>
     <!-- Hero Section with Background Image -->
-    <section class="relative bg-medical-600 text-white overflow-hidden">
-        <img
-            src="/images/beautiful-female-therapist-clinic.jpg"
-            alt=""
-            class="absolute inset-0 w-full h-full object-cover"
-        />
+    <section class="relative bg-medical-600 text-white overflow-hidden min-h-[300px]">
+        <picture>
+            <source
+                type="image/webp"
+                srcset="/images/optimized/beautiful-female-therapist-clinic-mobile.webp 480w,
+                        /images/optimized/beautiful-female-therapist-clinic-tablet.webp 768w,
+                        /images/optimized/beautiful-female-therapist-clinic-desktop.webp 1200w"
+                sizes="100vw"
+            />
+            <img
+                src="/images/beautiful-female-therapist-clinic.jpg"
+                alt=""
+                class="absolute inset-0 w-full h-full object-cover"
+                fetchpriority="high"
+                decoding="async"
+            />
+        </picture>
         <div class="absolute inset-0 bg-gradient-to-r from-medical-800/95 via-medical-700/85 to-medical-600/70"></div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">

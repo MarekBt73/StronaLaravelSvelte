@@ -24,7 +24,8 @@
       "Bash(npm cache clean:*)",
       "Bash(cat:*)",
       "Bash(dir:*)",
-      "WebFetch(domain:web-production-8d2c7.up.railway.app)"
+      "WebFetch(domain:web-production-8d2c7.up.railway.app)",
+      "Bash(find:*)"
     ]
   }
 }

@@ -100,12 +100,24 @@
 
 <MainLayout>
     <!-- Hero Section -->
-    <section class="relative bg-medical-600 text-white overflow-hidden">
-        <img
-            src="/images/beautiful-female-therapist-clinic.jpg"
-            alt=""
-            class="absolute inset-0 w-full h-full object-cover"
-        />
+    <section class="relative bg-medical-600 text-white overflow-hidden min-h-[600px] lg:min-h-[700px]">
+        <picture>
+            <source
+                type="image/webp"
+                srcset="/images/optimized/beautiful-female-therapist-clinic-mobile.webp 480w,
+                        /images/optimized/beautiful-female-therapist-clinic-tablet.webp 768w,
+                        /images/optimized/beautiful-female-therapist-clinic-desktop.webp 1200w,
+                        /images/optimized/beautiful-female-therapist-clinic.webp 1920w"
+                sizes="100vw"
+            />
+            <img
+                src="/images/beautiful-female-therapist-clinic.jpg"
+                alt=""
+                class="absolute inset-0 w-full h-full object-cover"
+                fetchpriority="high"
+                decoding="async"
+            />
+        </picture>
         <div class="absolute inset-0 bg-gradient-to-r from-medical-800/95 via-medical-700/85 to-medical-600/70"></div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
@@ -136,11 +148,21 @@
                     </div>
                 </div>
                 <div class="hidden lg:flex justify-end">
-                    <img
-                        src="/images/PIELENGNIARKA-DOBRON_BEZ_TLA_3_max.png"
-                        alt="Pielęgniarka MedVita"
-                        class="max-h-[500px] w-auto drop-shadow-2xl"
-                    />
+                    <picture>
+                        <source
+                            type="image/webp"
+                            srcset="/images/optimized/PIELENGNIARKA-DOBRON_BEZ_TLA_3_max.webp"
+                        />
+                        <img
+                            src="/images/PIELENGNIARKA-DOBRON_BEZ_TLA_3_max.png"
+                            alt="Pielęgniarka MedVita"
+                            class="max-h-[500px] w-auto drop-shadow-2xl"
+                            width="400"
+                            height="500"
+                            loading="eager"
+                            decoding="async"
+                        />
+                    </picture>
                 </div>
             </div>
         </div>
@@ -175,14 +197,23 @@
                             <p class="text-sm text-gray-600">{service.description}</p>
                         </div>
                         <!-- Mobile: obrazek po prawej, Desktop: obrazek na górze -->
-                        <div class="w-24 h-24 sm:w-40 sm:h-40 lg:w-48 lg:h-48 flex-shrink-0 sm:mx-auto sm:mb-4 sm:order-1">
-                            <img
-                                src={service.image}
-                                alt=""
-                                aria-hidden="true"
-                                class="w-full h-full object-contain"
-                                loading="lazy"
-                            />
+                        <div class="w-24 h-24 sm:w-40 sm:h-40 lg:w-48 lg:h-48 flex-shrink-0 sm:mx-auto sm:mb-4 sm:order-1" style="aspect-ratio: 1/1;">
+                            <picture>
+                                <source
+                                    type="image/webp"
+                                    srcset={service.image.replace(/\.(png|jpg)$/, '.webp').replace('/images/', '/images/optimized/')}
+                                />
+                                <img
+                                    src={service.image}
+                                    alt=""
+                                    aria-hidden="true"
+                                    class="w-full h-full object-contain"
+                                    loading="lazy"
+                                    decoding="async"
+                                    width="192"
+                                    height="192"
+                                />
+                            </picture>
                         </div>
                     </a>
                 {/each}
@@ -202,14 +233,23 @@
             <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
                 {#each features as feature}
                     <div class="bg-white rounded-xl p-6 sm:p-8 shadow-sm hover:shadow-md transition-shadow">
-                        <div class="w-12 h-12 sm:w-16 sm:h-16 mb-3 sm:mb-4">
-                            <img
-                                src={feature.image}
-                                alt=""
-                                aria-hidden="true"
-                                class="w-full h-full object-contain"
-                                loading="lazy"
-                            />
+                        <div class="w-12 h-12 sm:w-16 sm:h-16 mb-3 sm:mb-4" style="aspect-ratio: 1/1;">
+                            <picture>
+                                <source
+                                    type="image/webp"
+                                    srcset={feature.image.replace(/\.(png|jpg)$/, '.webp').replace('/images/', '/images/optimized/')}
+                                />
+                                <img
+                                    src={feature.image}
+                                    alt=""
+                                    aria-hidden="true"
+                                    class="w-full h-full object-contain"
+                                    loading="lazy"
+                                    decoding="async"
+                                    width="64"
+                                    height="64"
+                                />
+                            </picture>
                         </div>
                         <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">{feature.title}</h3>
                         <p class="text-sm sm:text-base text-gray-600">{feature.description}</p>
@@ -245,12 +285,22 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {#each news as article}
                     <article class="bg-gray-50 rounded-2xl overflow-hidden hover:shadow-lg transition-shadow group">
-                        <div class="relative h-48 overflow-hidden">
-                            <img
-                                src={article.image}
-                                alt={article.title}
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            />
+                        <div class="relative h-48 overflow-hidden" style="aspect-ratio: 16/9;">
+                            <picture>
+                                <source
+                                    type="image/webp"
+                                    srcset={article.image.replace(/\.(png|jpg)$/, '.webp').replace('/images/', '/images/optimized/')}
+                                />
+                                <img
+                                    src={article.image}
+                                    alt={article.title}
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    loading="lazy"
+                                    decoding="async"
+                                    width="400"
+                                    height="225"
+                                />
+                            </picture>
                             <span class="absolute top-4 left-4 px-3 py-1 bg-medical-600 text-white text-xs font-medium rounded-full">
                                 {article.category}
                             </span>
