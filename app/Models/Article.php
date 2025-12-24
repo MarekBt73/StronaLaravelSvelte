@@ -39,6 +39,52 @@ class Article extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function featuredMedia(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'featured_image_id');
+    }
+
+    /**
+     * Get the featured image URL (from media library or direct upload).
+     */
+    public function getFeaturedImageUrlAttribute(): ?string
+    {
+        if ($this->featured_image_id && $this->featuredMedia) {
+            return $this->featuredMedia->url;
+        }
+
+        if ($this->featured_image) {
+            return asset('storage/' . $this->featured_image);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get responsive image URLs for featured image.
+     */
+    public function getFeaturedImageSrcsetAttribute(): ?array
+    {
+        if (! $this->featured_image_id || ! $this->featuredMedia) {
+            return null;
+        }
+
+        $media = $this->featuredMedia;
+        $srcset = [];
+
+        if ($media->mobile_url) {
+            $srcset['mobile'] = $media->mobile_url;
+        }
+        if ($media->tablet_url) {
+            $srcset['tablet'] = $media->tablet_url;
+        }
+        if ($media->desktop_url) {
+            $srcset['desktop'] = $media->desktop_url;
+        }
+
+        return count($srcset) > 0 ? $srcset : null;
+    }
+
     public function scopePublished($query)
     {
         return $query->where('is_published', true)

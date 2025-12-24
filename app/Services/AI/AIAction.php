@@ -15,6 +15,7 @@ enum AIAction: string
     case SUGGEST_TITLES = 'suggest_titles';
     case SUMMARIZE = 'summarize';
     case TRANSLATE = 'translate';
+    case DESCRIBE_IMAGE = 'describe_image';
 
     /**
      * Zwraca etykiete akcji do wyswietlenia w UI.
@@ -31,6 +32,7 @@ enum AIAction: string
             self::SUGGEST_TITLES => 'Sugeruj tytuly',
             self::SUMMARIZE => 'Streszczenie',
             self::TRANSLATE => 'Tlumacz',
+            self::DESCRIBE_IMAGE => 'Opisz obraz',
         };
     }
 
@@ -49,6 +51,7 @@ enum AIAction: string
             self::SUGGEST_TITLES => 'Proponuje 5 wariantow tytulu',
             self::SUMMARIZE => 'Tworzy krotkie podsumowanie / lead',
             self::TRANSLATE => 'Tlumaczenie tekstu',
+            self::DESCRIBE_IMAGE => 'Analizuje obraz i generuje opis ALT oraz tagi',
         };
     }
 

@@ -8,8 +8,10 @@ use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use App\Filament\Resources\ArticleResource\Pages;
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\Media;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -67,17 +69,132 @@ class ArticleResource extends Resource
 
                         Forms\Components\Section::make('Zdjęcie główne')
                             ->schema([
+                                Forms\Components\Toggle::make('use_media_library')
+                                    ->label('Wybierz z biblioteki mediow')
+                                    ->default(false)
+                                    ->live()
+                                    ->dehydrated(false)
+                                    ->afterStateHydrated(function (Forms\Components\Toggle $component, ?Article $record) {
+                                        // If featured_image_id exists, use media library
+                                        $component->state($record?->featured_image_id !== null);
+                                    }),
+
                                 Forms\Components\FileUpload::make('featured_image')
-                                    ->label('Zdjęcie')
+                                    ->label('Przeslij zdjecie')
                                     ->image()
                                     ->directory('articles')
                                     ->imageEditor()
-                                    ->columnSpanFull(),
+                                    ->columnSpanFull()
+                                    ->visible(fn (Forms\Get $get): bool => ! $get('use_media_library')),
+
+                                Forms\Components\Select::make('featured_image_id')
+                                    ->label('Wybierz z galerii')
+                                    ->options(fn () => Media::query()
+                                        ->where('type', 'image')
+                                        ->orderBy('created_at', 'desc')
+                                        ->limit(100)
+                                        ->get()
+                                        ->mapWithKeys(fn (Media $media) => [
+                                            $media->id => $media->name . ' (' . $media->formatted_size . ')',
+                                        ]))
+                                    ->searchable()
+                                    ->preload()
+                                    ->columnSpanFull()
+                                    ->visible(fn (Forms\Get $get): bool => $get('use_media_library'))
+                                    ->live()
+                                    ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set, ?int $state) {
+                                        if ($state) {
+                                            $media = Media::find($state);
+                                            if ($media && $media->alt_text) {
+                                                $set('featured_image_alt', $media->alt_text);
+                                            }
+                                        }
+                                    })
+                                    ->suffixAction(
+                                        Forms\Components\Actions\Action::make('viewMedia')
+                                            ->icon('heroicon-o-eye')
+                                            ->tooltip('Podglad')
+                                            ->url(fn (Forms\Get $get): ?string => $get('featured_image_id')
+                                                ? route('filament.admin.resources.media.edit', ['record' => $get('featured_image_id')])
+                                                : null)
+                                            ->openUrlInNewTab()
+                                            ->visible(fn (Forms\Get $get): bool => $get('featured_image_id') !== null)
+                                    ),
+
+                                Forms\Components\Placeholder::make('media_preview')
+                                    ->label('Podglad')
+                                    ->content(function (Forms\Get $get): string {
+                                        $mediaId = $get('featured_image_id');
+                                        if (! $mediaId) {
+                                            return '';
+                                        }
+                                        $media = Media::find($mediaId);
+                                        if (! $media) {
+                                            return '';
+                                        }
+
+                                        return '<img src="' . $media->url . '" class="max-h-48 rounded-lg shadow" alt="' . e($media->alt_text ?? $media->name) . '">';
+                                    })
+                                    ->visible(fn (Forms\Get $get): bool => $get('use_media_library') && $get('featured_image_id') !== null)
+                                    ->dehydrated(false),
 
                                 Forms\Components\TextInput::make('featured_image_alt')
                                     ->label('Opis alternatywny (ALT)')
                                     ->helperText('Opis zdjęcia dla osób niewidomych i SEO')
-                                    ->maxLength(255),
+                                    ->maxLength(255)
+                                    ->suffixAction(
+                                        Forms\Components\Actions\Action::make('generateImageAlt')
+                                            ->icon('heroicon-o-sparkles')
+                                            ->tooltip('Generuj z AI')
+                                            ->visible(fn (Forms\Get $get): bool => $get('use_media_library') && $get('featured_image_id') !== null)
+                                            ->action(function (Forms\Get $get, Forms\Set $set) {
+                                                $mediaId = $get('featured_image_id');
+                                                if (! $mediaId) {
+                                                    return;
+                                                }
+                                                $media = Media::find($mediaId);
+                                                if (! $media) {
+                                                    return;
+                                                }
+
+                                                try {
+                                                    $aiManager = app(\App\Services\AI\AIManager::class);
+                                                    $request = new \App\Services\AI\DTOs\AIRequest(
+                                                        action: \App\Services\AI\AIAction::DESCRIBE_IMAGE,
+                                                        content: $get('title') ?? $media->name,
+                                                        options: [
+                                                            'image_path' => $media->path,
+                                                            'disk' => $media->disk,
+                                                        ],
+                                                    );
+
+                                                    $response = $aiManager->generate($request);
+
+                                                    if ($response->success) {
+                                                        $data = json_decode(
+                                                            preg_replace('/```json\s*|\s*```/', '', $response->content),
+                                                            true
+                                                        );
+
+                                                        if (isset($data['alt_text'])) {
+                                                            $set('featured_image_alt', mb_substr($data['alt_text'], 0, 125));
+
+                                                            Notification::make()
+                                                                ->title('Sukces')
+                                                                ->body('Tekst ALT zostal wygenerowany.')
+                                                                ->success()
+                                                                ->send();
+                                                        }
+                                                    }
+                                                } catch (\Exception $e) {
+                                                    Notification::make()
+                                                        ->title('Blad')
+                                                        ->body('Nie udalo sie wygenerowac opisu.')
+                                                        ->danger()
+                                                        ->send();
+                                                }
+                                            })
+                                    ),
                             ]),
 
                         Forms\Components\Section::make('SEO')

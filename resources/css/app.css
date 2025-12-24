@@ -1,3 +1,162 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ==========================================================================
+   Accessibility Styles - Panel dostepnosci
+   ========================================================================== */
+
+/* Font Size Options */
+html.a11y-font-small {
+    font-size: 14px;
+}
+
+html.a11y-font-normal {
+    font-size: 16px;
+}
+
+html.a11y-font-large {
+    font-size: 20px;
+}
+
+/* High Contrast Mode */
+html.a11y-contrast-high {
+    --a11y-bg: #000000;
+    --a11y-text: #ffffff;
+    --a11y-link: #ffff00;
+    --a11y-border: #ffffff;
+}
+
+html.a11y-contrast-high body {
+    background-color: var(--a11y-bg) !important;
+    color: var(--a11y-text) !important;
+}
+
+html.a11y-contrast-high a {
+    color: var(--a11y-link) !important;
+    text-decoration: underline !important;
+}
+
+html.a11y-contrast-high button,
+html.a11y-contrast-high input,
+html.a11y-contrast-high textarea,
+html.a11y-contrast-high select {
+    background-color: var(--a11y-bg) !important;
+    color: var(--a11y-text) !important;
+    border-color: var(--a11y-border) !important;
+}
+
+html.a11y-contrast-high header,
+html.a11y-contrast-high nav,
+html.a11y-contrast-high footer,
+html.a11y-contrast-high section,
+html.a11y-contrast-high article,
+html.a11y-contrast-high div {
+    background-color: var(--a11y-bg) !important;
+    color: var(--a11y-text) !important;
+}
+
+html.a11y-contrast-high img {
+    filter: grayscale(100%) contrast(120%);
+}
+
+/* Uppercase Letter Case */
+html.a11y-case-uppercase body {
+    text-transform: uppercase !important;
+}
+
+html.a11y-case-uppercase * {
+    text-transform: inherit !important;
+}
+
+/* Dark Theme */
+html.a11y-theme-dark body {
+    background-color: #1a1a2e !important;
+    color: #eaeaea !important;
+}
+
+html.a11y-theme-dark header,
+html.a11y-theme-dark footer {
+    background-color: #16213e !important;
+}
+
+html.a11y-theme-dark nav {
+    background-color: #0f3460 !important;
+}
+
+html.a11y-theme-dark section,
+html.a11y-theme-dark article {
+    background-color: #1a1a2e !important;
+}
+
+html.a11y-theme-dark .bg-white {
+    background-color: #1a1a2e !important;
+}
+
+html.a11y-theme-dark .bg-gray-50,
+html.a11y-theme-dark .bg-gray-100 {
+    background-color: #16213e !important;
+}
+
+html.a11y-theme-dark .text-gray-900,
+html.a11y-theme-dark .text-gray-800,
+html.a11y-theme-dark .text-gray-700 {
+    color: #eaeaea !important;
+}
+
+html.a11y-theme-dark .text-gray-600,
+html.a11y-theme-dark .text-gray-500 {
+    color: #b8b8b8 !important;
+}
+
+html.a11y-theme-dark .border-gray-200,
+html.a11y-theme-dark .border-gray-100 {
+    border-color: #0f3460 !important;
+}
+
+html.a11y-theme-dark a:not([class*="bg-"]) {
+    color: #94b8ff !important;
+}
+
+html.a11y-theme-dark .shadow,
+html.a11y-theme-dark .shadow-sm,
+html.a11y-theme-dark .shadow-md,
+html.a11y-theme-dark .shadow-lg {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Accessibility panel exception - always visible correctly */
+html.a11y-contrast-high #a11y-panel,
+html.a11y-theme-dark #a11y-panel {
+    background-color: #ffffff !important;
+    color: #333333 !important;
+}
+
+html.a11y-contrast-high #a11y-panel *,
+html.a11y-theme-dark #a11y-panel * {
+    color: inherit !important;
+    background-color: inherit !important;
+}
+
+html.a11y-contrast-high #a11y-panel .bg-medical-600,
+html.a11y-theme-dark #a11y-panel .bg-medical-600 {
+    background-color: rgb(9 121 105) !important;
+    color: #ffffff !important;
+}
+
+html.a11y-contrast-high #a11y-panel button,
+html.a11y-theme-dark #a11y-panel button {
+    background-color: transparent !important;
+}
+
+/* Skip to content link styles */
+.sr-only:focus {
+    position: absolute !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 0.5rem 1rem !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: nowrap !important;
+}

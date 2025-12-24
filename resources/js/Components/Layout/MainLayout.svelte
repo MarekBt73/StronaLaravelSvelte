@@ -1,8 +1,12 @@
 <script>
     import { inertia } from '@inertiajs/svelte';
     import { router } from '@inertiajs/svelte';
+    import AccessibilityPanel from '../AccessibilityPanel.svelte';
 
     let { children } = $props();
+
+    // Accessibility panel state
+    let a11yPanelOpen = $state(false);
 
     // Mobile menu state
     let mobileMenuOpen = $state(false);
@@ -550,6 +554,9 @@
         </div>
     </div>
 </footer>
+
+<!-- Accessibility Panel -->
+<AccessibilityPanel bind:isOpen={a11yPanelOpen} />
 
 <!-- Demo Site Popup -->
 {#if showDemoPopup}

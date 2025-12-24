@@ -10,11 +10,13 @@ use App\Services\AI\DTOs\AIResponse;
 use App\Services\AI\Exceptions\ProviderException;
 use App\Services\AI\Exceptions\RateLimitException;
 use App\Services\AI\Prompts\ArticlePrompts;
+use App\Services\AI\Prompts\ImagePrompts;
 use App\Services\AI\Prompts\SEOPrompts;
 use App\Services\AI\Prompts\StyleGuide;
 use App\Services\AI\AIAction;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class GeminiProvider implements AIProviderInterface
 {
@@ -42,6 +44,11 @@ class GeminiProvider implements AIProviderInterface
     {
         if (! $this->isAvailable()) {
             return AIResponse::error('Klucz API Gemini nie jest skonfigurowany.', 'missing_api_key');
+        }
+
+        // Handle image description separately (requires vision API)
+        if ($request->action === AIAction::DESCRIBE_IMAGE) {
+            return $this->analyzeImage($request);
         }
 
         try {
@@ -236,5 +243,137 @@ class GeminiProvider implements AIProviderInterface
             'completion' => $usage['candidatesTokenCount'] ?? null,
             'total' => isset($usage['totalTokenCount']) ? (int) $usage['totalTokenCount'] : null,
         ];
+    }
+
+    /**
+     * Analizuje obraz za pomoca Gemini Vision API.
+     */
+    public function analyzeImage(AIRequest $request): AIResponse
+    {
+        try {
+            $imagePath = $request->getOption('image_path');
+            $disk = $request->getOption('disk', 'public');
+            $context = $request->content ?? null;
+
+            if (empty($imagePath)) {
+                return AIResponse::error('Nie podano sciezki do obrazu.', 'missing_image');
+            }
+
+            // Read image and encode to base64
+            $imageData = $this->getImageBase64($imagePath, $disk);
+
+            if (! $imageData) {
+                return AIResponse::error('Nie mozna odczytac obrazu.', 'image_read_error');
+            }
+
+            $prompt = ImagePrompts::getDescribeImagePrompt($context);
+
+            $response = Http::timeout($this->timeout)
+                ->withHeaders([
+                    'Content-Type' => 'application/json',
+                ])
+                ->post($this->getEndpoint(), [
+                    'contents' => [
+                        [
+                            'role' => 'user',
+                            'parts' => [
+                                [
+                                    'inline_data' => [
+                                        'mime_type' => $imageData['mime_type'],
+                                        'data' => $imageData['base64'],
+                                    ],
+                                ],
+                                ['text' => $prompt],
+                            ],
+                        ],
+                    ],
+                    'generationConfig' => [
+                        'temperature' => 0.4, // Lower temperature for more accurate descriptions
+                        'maxOutputTokens' => 1024,
+                        'topP' => 0.95,
+                        'topK' => 40,
+                    ],
+                ]);
+
+            if ($response->status() === 429) {
+                throw new RateLimitException();
+            }
+
+            if ($response->failed()) {
+                $errorBody = $response->json();
+                $errorMessage = $errorBody['error']['message'] ?? 'Nieznany blad API Gemini Vision';
+
+                Log::error('Gemini Vision API error', [
+                    'status' => $response->status(),
+                    'body' => $errorBody,
+                ]);
+
+                throw new ProviderException($errorMessage, 'gemini_vision_error', json_encode($errorBody));
+            }
+
+            $data = $response->json();
+            $content = $this->extractContent($data);
+            $tokenInfo = $this->extractTokenInfo($data);
+
+            return AIResponse::success(
+                content: $content,
+                model: $this->model,
+                provider: $this->getIdentifier(),
+                tokensUsed: $tokenInfo['total'],
+                promptTokens: $tokenInfo['prompt'],
+                completionTokens: $tokenInfo['completion'],
+            );
+
+        } catch (RateLimitException|ProviderException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            Log::error('Gemini Vision exception', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return AIResponse::error(
+                'Wystapil blad podczas analizy obrazu: ' . $e->getMessage(),
+                'vision_error'
+            );
+        }
+    }
+
+    /**
+     * Pobiera obraz i koduje do base64.
+     *
+     * @return array{base64: string, mime_type: string}|null
+     */
+    private function getImageBase64(string $path, string $disk = 'public'): ?array
+    {
+        try {
+            // Check if it's a full path or storage path
+            if (file_exists($path)) {
+                $content = file_get_contents($path);
+                $mimeType = mime_content_type($path);
+            } elseif (Storage::disk($disk)->exists($path)) {
+                $content = Storage::disk($disk)->get($path);
+                $mimeType = Storage::disk($disk)->mimeType($path);
+            } else {
+                return null;
+            }
+
+            if (! $content) {
+                return null;
+            }
+
+            return [
+                'base64' => base64_encode($content),
+                'mime_type' => $mimeType ?: 'image/jpeg',
+            ];
+        } catch (\Exception $e) {
+            Log::error('Error reading image for AI analysis', [
+                'path' => $path,
+                'disk' => $disk,
+                'error' => $e->getMessage(),
+            ]);
+
+            return null;
+        }
     }
 }
