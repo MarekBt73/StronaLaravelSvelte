@@ -1,6 +1,7 @@
 <script>
     import { inertia } from '@inertiajs/svelte';
     import { router } from '@inertiajs/svelte';
+    import { onMount } from 'svelte';
     import AccessibilityPanel from '../AccessibilityPanel.svelte';
     import CookieConsent from '../CookieConsent.svelte';
 
@@ -31,15 +32,14 @@
     let showDemoPopup = $state(false);
 
     // Show demo popup after 10 seconds (only if not dismissed before)
-    $effect(() => {
-        if (typeof window !== 'undefined') {
-            const dismissed = localStorage.getItem('demoPopupDismissed');
-            if (!dismissed) {
-                const timer = setTimeout(() => {
-                    showDemoPopup = true;
-                }, 10000);
-                return () => clearTimeout(timer);
-            }
+    // Using onMount to prevent infinite loop
+    onMount(() => {
+        const dismissed = localStorage.getItem('demoPopupDismissed');
+        if (!dismissed) {
+            const timer = setTimeout(() => {
+                showDemoPopup = true;
+            }, 10000);
+            return () => clearTimeout(timer);
         }
     });
 

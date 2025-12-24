@@ -1,4 +1,6 @@
 <script>
+    import { onMount } from 'svelte';
+
     let { isOpen = $bindable(false) } = $props();
 
     // Accessibility settings with defaults
@@ -9,28 +11,30 @@
         theme: 'light'           // light, dark
     });
 
-    // Load settings from localStorage on mount
-    $effect(() => {
-        if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem('a11ySettings');
-            if (saved) {
-                try {
-                    settings = { ...settings, ...JSON.parse(saved) };
-                } catch (e) {
-                    console.error('Failed to parse a11y settings', e);
-                }
+    // Load settings from localStorage on mount (onMount prevents infinite loop)
+    onMount(() => {
+        const saved = localStorage.getItem('a11ySettings');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                settings.fontSize = parsed.fontSize || 'normal';
+                settings.contrast = parsed.contrast || 'normal';
+                settings.letterCase = parsed.letterCase || 'normal';
+                settings.theme = parsed.theme || 'light';
+            } catch (e) {
+                console.error('Failed to parse a11y settings', e);
             }
-            applySettings();
         }
+        applySettings();
     });
 
-    // Save and apply settings whenever they change
-    $effect(() => {
+    // Save and apply settings - call this function manually instead of using $effect
+    function saveAndApplySettings() {
         if (typeof window !== 'undefined') {
             localStorage.setItem('a11ySettings', JSON.stringify(settings));
             applySettings();
         }
-    });
+    }
 
     // Apply settings to document
     function applySettings() {
@@ -56,12 +60,11 @@
 
     // Reset to defaults
     function resetSettings() {
-        settings = {
-            fontSize: 'normal',
-            contrast: 'normal',
-            letterCase: 'normal',
-            theme: 'light'
-        };
+        settings.fontSize = 'normal';
+        settings.contrast = 'normal';
+        settings.letterCase = 'normal';
+        settings.theme = 'light';
+        saveAndApplySettings();
     }
 
     // Toggle panel
@@ -150,7 +153,7 @@
                 <div class="flex gap-2" role="radiogroup" aria-label="Rozmiar czcionki">
                     <button
                         type="button"
-                        onclick={() => settings.fontSize = 'small'}
+                        onclick={() => { settings.fontSize = 'small'; saveAndApplySettings(); }}
                         class="flex-1 px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all
                                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-medical-500
                                {settings.fontSize === 'small'
@@ -163,7 +166,7 @@
                     </button>
                     <button
                         type="button"
-                        onclick={() => settings.fontSize = 'normal'}
+                        onclick={() => { settings.fontSize = 'normal'; saveAndApplySettings(); }}
                         class="flex-1 px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all
                                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-medical-500
                                {settings.fontSize === 'normal'
@@ -176,7 +179,7 @@
                     </button>
                     <button
                         type="button"
-                        onclick={() => settings.fontSize = 'large'}
+                        onclick={() => { settings.fontSize = 'large'; saveAndApplySettings(); }}
                         class="flex-1 px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all
                                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-medical-500
                                {settings.fontSize === 'large'
@@ -198,7 +201,7 @@
                 <div class="flex gap-2" role="radiogroup" aria-label="Kontrast kolorow">
                     <button
                         type="button"
-                        onclick={() => settings.contrast = 'normal'}
+                        onclick={() => { settings.contrast = 'normal'; saveAndApplySettings(); }}
                         class="flex-1 px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all
                                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-medical-500
                                {settings.contrast === 'normal'
@@ -211,7 +214,7 @@
                     </button>
                     <button
                         type="button"
-                        onclick={() => settings.contrast = 'high'}
+                        onclick={() => { settings.contrast = 'high'; saveAndApplySettings(); }}
                         class="flex-1 px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all
                                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-medical-500
                                {settings.contrast === 'high'
@@ -233,7 +236,7 @@
                 <div class="flex gap-2" role="radiogroup" aria-label="Wielkosc liter">
                     <button
                         type="button"
-                        onclick={() => settings.letterCase = 'normal'}
+                        onclick={() => { settings.letterCase = 'normal'; saveAndApplySettings(); }}
                         class="flex-1 px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all
                                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-medical-500
                                {settings.letterCase === 'normal'
@@ -246,7 +249,7 @@
                     </button>
                     <button
                         type="button"
-                        onclick={() => settings.letterCase = 'uppercase'}
+                        onclick={() => { settings.letterCase = 'uppercase'; saveAndApplySettings(); }}
                         class="flex-1 px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all uppercase
                                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-medical-500
                                {settings.letterCase === 'uppercase'
@@ -268,7 +271,7 @@
                 <div class="flex gap-2" role="radiogroup" aria-label="Tryb wyswietlania">
                     <button
                         type="button"
-                        onclick={() => settings.theme = 'light'}
+                        onclick={() => { settings.theme = 'light'; saveAndApplySettings(); }}
                         class="flex-1 px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all
                                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-medical-500
                                {settings.theme === 'light'
@@ -285,7 +288,7 @@
                     </button>
                     <button
                         type="button"
-                        onclick={() => settings.theme = 'dark'}
+                        onclick={() => { settings.theme = 'dark'; saveAndApplySettings(); }}
                         class="flex-1 px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all
                                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-medical-500
                                {settings.theme === 'dark'
