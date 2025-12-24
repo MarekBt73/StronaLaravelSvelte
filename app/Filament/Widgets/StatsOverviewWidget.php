@@ -19,7 +19,7 @@ class StatsOverviewWidget extends BaseWidget
         $totalArticles = Article::count();
         $publishedArticles = Article::where('is_published', true)->count();
         $draftArticles = $totalArticles - $publishedArticles;
-        $totalViews = Article::sum('views');
+        $totalViews = (int) Article::sum('views');
         $mediaCount = Media::count();
         $categoriesCount = Category::count();
 
