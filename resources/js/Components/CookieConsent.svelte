@@ -15,6 +15,18 @@
     let showDetails = $state(false);
     let isLoading = $state(true);
 
+    // Nasluchuj eventu otwierania ustawien
+    $effect(() => {
+        if (typeof window !== 'undefined') {
+            const handler = () => {
+                showBanner = true;
+                showDetails = true;
+            };
+            window.addEventListener('openCookieSettings', handler);
+            return () => window.removeEventListener('openCookieSettings', handler);
+        }
+    });
+
     // Kategorie ciasteczek
     let consent = $state({
         essential: true,      // Zawsze wymagane - nie można wyłączyć
@@ -76,12 +88,6 @@
     // Zapisz wybrane ustawienia
     function saveSelected() {
         saveConsent(consent);
-    }
-
-    // Otwórz ustawienia (z zewnątrz)
-    export function openSettings() {
-        showBanner = true;
-        showDetails = true;
     }
 
     // Kategorie z opisami
@@ -221,7 +227,8 @@
                                     <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
                                         <input
                                             type="checkbox"
-                                            bind:checked={consent[category.id]}
+                                            checked={consent[category.id]}
+                                            onchange={(e) => { consent[category.id] = e.target.checked; }}
                                             disabled={category.required}
                                             class="sr-only peer"
                                         />

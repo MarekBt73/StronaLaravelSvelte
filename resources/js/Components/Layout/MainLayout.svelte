@@ -6,11 +6,11 @@
 
     let { children } = $props();
 
-    // Cookie consent reference
-    let cookieConsentRef = $state(null);
-
+    // Otwórz ustawienia cookies przez event
     function openCookieSettings() {
-        cookieConsentRef?.openSettings();
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('openCookieSettings'));
+        }
     }
 
     // Accessibility panel state
@@ -576,7 +576,7 @@
 <AccessibilityPanel bind:isOpen={a11yPanelOpen} />
 
 <!-- Cookie Consent -->
-<CookieConsent bind:this={cookieConsentRef} />
+<CookieConsent />
 
 <!-- Demo Site Popup -->
 {#if showDemoPopup}
